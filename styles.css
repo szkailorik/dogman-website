@@ -1,0 +1,1412 @@
+/* ========================================
+   Dog Man 官方粉丝网站样式表
+   ======================================== */
+
+/* 基础变量 */
+:root {
+    --primary-color: #e63946;
+    --secondary-color: #457b9d;
+    --accent-color: #f4a261;
+    --dark-color: #1d3557;
+    --light-color: #f1faee;
+    --white: #ffffff;
+    --text-color: #333;
+    --text-light: #666;
+    --gradient-hero: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --shadow-strong: 0 15px 50px rgba(0, 0, 0, 0.2);
+    --border-radius: 16px;
+    --border-radius-sm: 8px;
+    --transition: all 0.3s ease;
+}
+
+/* 重置样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Noto Sans SC', 'Comic Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.7;
+    color: var(--text-color);
+    background-color: var(--light-color);
+}
+
+/* 隐藏类 */
+.hidden {
+    display: none !important;
+}
+
+/* 容器 */
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+/* ========================================
+   导航栏
+   ======================================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.brand-text {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 25px;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.lang-switch {
+    display: flex;
+    gap: 5px;
+    background: var(--light-color);
+    padding: 5px;
+    border-radius: 25px;
+}
+
+.lang-switch button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition);
+    background: transparent;
+    color: var(--text-light);
+}
+
+.lang-switch button.active {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.lang-switch button:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================
+   英雄区
+   ======================================== */
+.hero {
+    min-height: 100vh;
+    background: var(--gradient-hero);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.15;
+}
+
+.hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 1;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-family: 'Bangers', cursive;
+    font-size: 6rem;
+    color: var(--white);
+    text-shadow: 4px 4px 0 var(--primary-color), 8px 8px 0 rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 8px;
+    animation: titlePop 0.8s ease-out;
+}
+
+@keyframes titlePop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-family: 'Bangers', cursive;
+    font-size: 3.5rem;
+    color: var(--accent-color);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 18px 50px;
+    background: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 50px;
+    transition: var(--transition);
+    box-shadow: 0 5px 20px rgba(230, 57, 70, 0.4);
+}
+
+.cta-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(230, 57, 70, 0.5);
+}
+
+/* ========================================
+   通用段落样式
+   ======================================== */
+.section {
+    padding: 100px 0;
+}
+
+.section-title {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 60px;
+    color: var(--dark-color);
+    letter-spacing: 3px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 5px;
+    background: var(--primary-color);
+    margin: 20px auto 0;
+    border-radius: 3px;
+}
+
+/* ========================================
+   关于区域
+   ======================================== */
+.about-section {
+    background: var(--white);
+}
+
+.about-main {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 50px;
+    margin-bottom: 60px;
+    align-items: start;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition);
+}
+
+.about-image img:hover {
+    transform: scale(1.02);
+}
+
+.about-text h3 {
+    font-size: 1.8rem;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+}
+
+.about-text p {
+    color: var(--text-light);
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    line-height: 1.9;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.feature-card {
+    background: var(--light-color);
+    padding: 35px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.feature-card h4 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   作者区域
+   ======================================== */
+.author-section {
+    background: linear-gradient(180deg, var(--light-color) 0%, #e8f4f8 100%);
+}
+
+.author-profile {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+    align-items: start;
+}
+
+.author-image img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+}
+
+.author-quick-facts {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.author-quick-facts h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.author-quick-facts ul {
+    list-style: none;
+}
+
+.author-quick-facts li {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    color: var(--text-light);
+}
+
+.author-quick-facts li:last-child {
+    border-bottom: none;
+}
+
+.author-quick-facts strong {
+    color: var(--dark-color);
+}
+
+.author-bio {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.bio-section {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.bio-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.bio-section p {
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+.bio-section.highlight {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #f8b878 100%);
+    grid-column: span 2;
+}
+
+.bio-section.highlight h3,
+.bio-section.highlight p {
+    color: var(--dark-color);
+}
+
+/* ========================================
+   角色区域
+   ======================================== */
+.characters-section {
+    background: var(--white);
+}
+
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.character-card {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: var(--shadow-soft);
+}
+
+.character-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-strong);
+}
+
+.character-card.hero-character {
+    border-top: 5px solid var(--secondary-color);
+}
+
+.character-card.villain-character {
+    border-top: 5px solid var(--primary-color);
+}
+
+.character-image {
+    height: 220px;
+    overflow: hidden;
+}
+
+.character-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.character-card:hover .character-image img {
+    transform: scale(1.1);
+}
+
+.character-info {
+    padding: 25px;
+}
+
+.character-info h3 {
+    font-size: 1.4rem;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.character-role {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.character-desc {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ========================================
+   书籍区域
+   ======================================== */
+.books-section {
+    background: var(--dark-color);
+    color: var(--white);
+}
+
+.books-section .section-title {
+    color: var(--white);
+}
+
+.books-section .section-title::after {
+    background: var(--accent-color);
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.book-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.book-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.book-cover {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.book-card:hover .book-cover img {
+    transform: scale(1.08);
+}
+
+.new-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.book-info {
+    padding: 20px;
+}
+
+.book-number {
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--dark-color);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.book-info h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.book-year {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.book-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.spinoff-notice {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 35px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.spinoff-notice h3 {
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.spinoff-notice p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+}
+
+/* ========================================
+   影响力区域
+   ======================================== */
+.impact-section {
+    background: linear-gradient(180deg, var(--white) 0%, var(--light-color) 100%);
+}
+
+.impact-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+.impact-stat-card {
+    background: var(--white);
+    padding: 40px 25px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.impact-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.stat-value {
+    font-family: 'Bangers', cursive;
+    font-size: 2.8rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stat-desc {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.impact-highlights {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-soft);
+}
+
+.impact-highlights h3 {
+    color: var(--dark-color);
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+.achievement-list {
+    list-style: none;
+}
+
+.achievement-list li {
+    display: flex;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+}
+
+.achievement-list li:last-child {
+    border-bottom: none;
+}
+
+.achievement-list .year {
+    background: var(--secondary-color);
+    color: var(--white);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.achievement-list .achievement {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+.impact-quote {
+    background: var(--dark-color);
+    padding: 50px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.impact-quote blockquote {
+    font-size: 1.3rem;
+    color: var(--white);
+    font-style: italic;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.impact-quote cite {
+    color: var(--accent-color);
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* ========================================
+   衍生作品区域
+   ======================================== */
+.media-section {
+    background: var(--white);
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.media-card {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.media-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-strong);
+}
+
+.media-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.media-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding: 40px 20px 15px;
+}
+
+.media-type {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.media-info {
+    padding: 25px;
+}
+
+.media-info h3 {
+    font-size: 1.3rem;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+.release-date {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.media-desc {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.cast-info h4 {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.cast-info ul {
+    list-style: none;
+}
+
+.cast-info li {
+    padding: 6px 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   页脚
+   ======================================== */
+.footer {
+    background: var(--dark-color);
+    color: var(--white);
+    padding: 70px 0 30px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.footer-section h4 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-section a:hover {
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================
+   响应式设计
+   ======================================== */
+@media (max-width: 1200px) {
+    .characters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .impact-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-links {
+        display: none;
+    }
+
+    .about-main {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .about-features {
+        grid-template-columns: 1fr;
+    }
+
+    .author-profile {
+        grid-template-columns: 1fr;
+    }
+
+    .author-image {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .author-bio {
+        grid-template-columns: 1fr;
+    }
+
+    .bio-section.highlight {
+        grid-column: span 1;
+    }
+
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .section {
+        padding: 70px 0;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .characters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .impact-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 10px 15px;
+    }
+
+    .brand-text {
+        font-size: 1.5rem;
+    }
+
+    .hero {
+        padding: 100px 20px 60px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        letter-spacing: 4px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .about-text h3 {
+        font-size: 1.4rem;
+    }
+
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-quote {
+        padding: 30px 20px;
+    }
+
+    .impact-quote blockquote {
+        font-size: 1.1rem;
+    }
+}
+
+/* ========================================
+   动画效果
+   ======================================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.about-card,
+.bio-section,
+.character-card,
+.book-card,
+.media-card,
+.impact-stat-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* 返回顶部按钮 */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 55px;
+    height: 55px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 999;
+    box-shadow: var(--shadow-medium);
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: var(--dark-color);
+    transform: translateY(-3px);
+}
+
+/* ========================================
+   语音导览控制面板
+   ======================================== */
+.audio-guide {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 998;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-strong);
+    padding: 15px 20px;
+    min-width: 280px;
+    transition: var(--transition);
+}
+
+.audio-guide-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.audio-icon {
+    font-size: 1.5rem;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.audio-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-btn {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.play-btn:hover {
+    background: #c5303c;
+    transform: scale(1.1);
+}
+
+.play-btn.playing {
+    background: var(--accent-color);
+}
+
+.stop-btn {
+    background: var(--dark-color);
+    color: var(--white);
+}
+
+.stop-btn:hover {
+    background: #0f2540;
+}
+
+.audio-progress {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.audio-status {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.audio-guide.minimized {
+    min-width: auto;
+    padding: 10px 15px;
+}
+
+.audio-guide.minimized .audio-controls,
+.audio-guide.minimized .audio-status {
+    display: none;
+}
+
+/* 正在播放动画 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.audio-guide.playing .audio-icon {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* ========================================
+   代表作品区域
+   ======================================== */
+.other-works-section {
+    background: linear-gradient(180deg, #f8f4f0 0%, #fff 100%);
+}
+
+.works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.work-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.work-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-strong);
+}
+
+.work-card.featured {
+    grid-column: span 2;
+    flex-direction: row;
+}
+
+.work-card.featured .work-image {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.work-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.work-card.featured .work-image {
+    height: auto;
+}
+
+.work-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.work-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.work-info {
+    padding: 25px;
+    flex: 1;
+}
+
+.work-info h3 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.work-subtitle {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.work-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.work-stat {
+    background: var(--light-color);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.work-stat strong {
+    color: var(--dark-color);
+    font-size: 1.1rem;
+}
+
+.work-desc {
+    color: var(--text-light);
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+/* 有趣故事盒子 */
+.fun-facts-box {
+    background: linear-gradient(135deg, var(--dark-color) 0%, #2a4a6a 100%);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    color: var(--white);
+}
+
+.fun-facts-box h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--accent-color);
+}
+
+.fun-facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.fun-fact {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+}
+
+.fun-fact-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.fun-fact p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.fun-fact strong {
+    color: var(--accent-color);
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* 响应式 - 代表作品 */
+@media (max-width: 992px) {
+    .works-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .work-card.featured {
+        grid-column: span 1;
+        flex-direction: column;
+    }
+
+    .work-card.featured .work-image {
+        width: 100%;
+        height: 250px;
+    }
+
+    .fun-facts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .audio-guide {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .audio-guide {
+        top: 70px;
+        padding: 12px 15px;
+    }
+
+    .audio-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ========================================
+   当前朗读高亮
+   ======================================== */
+.speaking-highlight {
+    background: linear-gradient(90deg, rgba(244, 162, 97, 0.3) 0%, rgba(244, 162, 97, 0.1) 100%);
+    border-left: 4px solid var(--accent-color);
+    padding-left: 15px;
+    transition: all 0.5s ease;
+}
+
+/* ========================================
+   游戏链接样式
+   ======================================== */
+.nav-game-link {
+    background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    font-weight: bold !important;
+    animation: pulse-game 2s infinite;
+}
+
+.nav-game-link:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4) !important;
+}
+
+@keyframes pulse-game {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+    }
+}

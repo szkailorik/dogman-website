@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Man - Official Fan Site | 官方粉丝网站</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- ResponsiveVoice TTS for natural voice synthesis -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
+</head>
+<body>
+    <!-- 语音导览控制面板 -->
+    <div id="audio-guide" class="audio-guide">
+        <div class="audio-guide-header">
+            <span class="audio-icon">🎧</span>
+            <span class="zh">语音导览</span>
+            <span class="en hidden">Audio Guide</span>
+        </div>
+        <div class="audio-controls">
+            <button id="audio-play" class="audio-btn play-btn" onclick="toggleAudioGuide()">
+                <span class="play-icon">▶</span>
+                <span class="pause-icon hidden">⏸</span>
+            </button>
+            <button id="audio-stop" class="audio-btn stop-btn" onclick="stopAudioGuide()">⏹</button>
+            <div class="audio-progress">
+                <div id="audio-progress-bar" class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="audio-status">
+            <span id="audio-status-text" class="zh">点击播放开始语音导览</span>
+            <span id="audio-status-text-en" class="en hidden">Click play to start audio guide</span>
+        </div>
+    </div>
+
+    <!-- 语言切换导航 -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man" class="brand-icon">
+                <span class="brand-text">DOG MAN</span>
+            </div>
+            <ul class="nav-links" id="nav-links-zh">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#author">作者</a></li>
+                <li><a href="#other-works">代表作</a></li>
+                <li><a href="#characters">角色</a></li>
+                <li><a href="#books">书籍</a></li>
+                <li><a href="#impact">影响力</a></li>
+                <li><a href="#media">衍生</a></li>
+                <li><a href="game.html" class="nav-game-link">🎮 游戏</a></li>
+            </ul>
+            <ul class="nav-links hidden" id="nav-links-en">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#author">Author</a></li>
+                <li><a href="#other-works">Works</a></li>
+                <li><a href="#characters">Characters</a></li>
+                <li><a href="#books">Books</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#media">Media</a></li>
+                <li><a href="game.html" class="nav-game-link">🎮 Game</a></li>
+            </ul>
+            <div class="lang-switch">
+                <button id="btn-zh" class="active" onclick="switchLang('zh')">中文</button>
+                <button id="btn-en" onclick="switchLang('en')">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页英雄区 -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man" class="hero-bg-img">
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">DOG MAN</h1>
+            <p class="hero-subtitle" id="hero-subtitle">
+                <span class="zh">探索这个半人半狗超级英雄的精彩冒险世界</span>
+                <span class="en hidden">Explore the Amazing World of This Half-Man, Half-Dog Superhero</span>
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">70M+</span>
+                    <span class="stat-label zh">全球销量</span>
+                    <span class="stat-label en hidden">Copies Sold</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">47</span>
+                    <span class="stat-label zh">翻译语言</span>
+                    <span class="stat-label en hidden">Languages</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">14</span>
+                    <span class="stat-label zh">系列书籍</span>
+                    <span class="stat-label en hidden">Books</span>
+                </div>
+            </div>
+            <a href="#about" class="cta-button">
+                <span class="zh">开始探索</span>
+                <span class="en hidden">Start Exploring</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- 关于 Dog Man -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">关于 Dog Man</span>
+                <span class="en hidden">About Dog Man</span>
+            </h2>
+
+            <!-- 中文版本 -->
+            <div class="about-content zh">
+                <div class="about-main">
+                    <div class="about-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man Book 1">
+                    </div>
+                    <div class="about-text">
+                        <h3>故事起源</h3>
+                        <p>Dog Man 是美国作家兼插画家 Dav Pilkey 创作的儿童图画小说系列。作为《内裤超人》(Captain Underpants) 系列的衍生作品，Dog Man 讲述了一个半人半狗混合体的超级英雄警察的冒险故事。</p>
+                        <p>故事开始于《内裤超人》中，主角 George Beard 和 Harold Hutchins 两个小学生在笔记本上创作了 Dog Man 这个角色。在 Dog Man 的世界里，警察 Knight 和他的警犬搭档 Greg 在一次由反派猫咪 Petey 策划的爆炸中受伤。在医院里，医生无法同时挽救两者的生命，但一位护士提出了一个大胆的想法——将 Greg 的头接到 Knight 的身体上。就这样，Dog Man 诞生了！</p>
+                        <p>Dog Man 拥有 Knight 的打击犯罪能力，但性格却像狗一样——喜欢舔人、追球、害怕吸尘器。虽然他不会说话，但他是这座城市最可靠的守护者。</p>
+                    </div>
+                </div>
+                <div class="about-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h4>独特的漫画风格</h4>
+                        <p>Dog Man 采用了翻页动画（Flip-O-Rama）技术，让静态的漫画页面动起来。书中的插图保留了儿童手绘的质朴风格，充满童趣和创意。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">❤️</div>
+                        <h4>积极正面的主题</h4>
+                        <p>系列探索了爱、同理心、善良、慈悲和自我提升等积极主题，同时也涉及失去、宽恕和自我接纳等更复杂的话题。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h4>鼓励创造力</h4>
+                        <p>书中角色的画技、语法和拼写随着系列的进展而进步，鼓励小读者们也开始自己的创作之旅。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 英文版本 -->
+            <div class="about-content en hidden">
+                <div class="about-main">
+                    <div class="about-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man Book 1">
+                    </div>
+                    <div class="about-text">
+                        <h3>Origin Story</h3>
+                        <p>Dog Man is an American children's graphic novel series by author and illustrator Dav Pilkey. A spinoff of the Captain Underpants series, Dog Man follows the adventures of a half-man, half-dog hybrid superhero who works as a police officer.</p>
+                        <p>The story originated within the pages of Captain Underpants, where protagonists George Beard and Harold Hutchins created Dog Man in their notebooks. In Dog Man's world, Officer Knight and his K9 partner Greg were injured in an explosion orchestrated by villain cat Petey. At the hospital, doctors couldn't save both, but a nurse suggested sewing Greg's head onto Knight's body. Thus, Dog Man was born!</p>
+                        <p>Dog Man has Knight's crime-fighting abilities but Greg's personality—he loves licking people, chasing balls, and is afraid of vacuum cleaners. Though he can't speak, he's the city's most reliable guardian.</p>
+                    </div>
+                </div>
+                <div class="about-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h4>Unique Comic Style</h4>
+                        <p>Dog Man features the Flip-O-Rama technique, bringing static comic pages to life. The illustrations retain a childlike hand-drawn quality, full of whimsy and creativity.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">❤️</div>
+                        <h4>Positive Themes</h4>
+                        <p>The series explores universally positive messages including love, empathy, kindness, compassion, and self-improvement, while also tackling complex themes like loss, forgiveness, and self-acceptance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h4>Encourages Creativity</h4>
+                        <p>The characters' artwork, grammar, and spelling improve as the series progresses, encouraging young readers to start their own creative journeys.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作者介绍 -->
+    <section id="author" class="section author-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">作者：Dav Pilkey</span>
+                <span class="en hidden">Author: Dav Pilkey</span>
+            </h2>
+
+            <!-- 中文版本 -->
+            <div class="author-content zh">
+                <div class="author-profile">
+                    <div class="author-image">
+                        <img src="https://pilkey.com/media_cache/userFiles/uploads/Author/max2000/dav.jpg" alt="Dav Pilkey">
+                    </div>
+                    <div class="author-quick-facts">
+                        <h3>基本信息</h3>
+                        <ul>
+                            <li><strong>全名：</strong>David Murray Pilkey Jr.</li>
+                            <li><strong>出生：</strong>1966年3月4日</li>
+                            <li><strong>出生地：</strong>美国俄亥俄州克利夫兰</li>
+                            <li><strong>职业：</strong>作家、插画家</li>
+                            <li><strong>代表作：</strong>内裤超人、Dog Man、Ricky Ricotta</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="author-bio">
+                    <div class="bio-section">
+                        <h3>笔名的由来</h3>
+                        <p>Dav Pilkey 的笔名来源于一个有趣的意外。他在必胜客打工时，名牌上的 "Dave" 被意外印成了 "Dav"，从此他就沿用了这个独特的名字。</p>
+                    </div>
+                    <div class="bio-section">
+                        <h3>克服困难的童年</h3>
+                        <p>Pilkey 患有注意力缺陷多动障碍（ADHD）和阅读障碍（Dyslexia），这使他在学校经常遇到困难。他常常因为在课堂上"捣乱"而被老师罚站到走廊。但正是在那个走廊里，年轻的 Pilkey 开始创作属于自己的故事和漫画。<strong>Captain Underpants 和 Dog Man 这两个著名角色就是在走廊里诞生的！</strong></p>
+                    </div>
+                    <div class="bio-section">
+                        <h3>职业生涯</h3>
+                        <p>1984年，Pilkey 进入肯特州立大学学习艺术。大一时，一位英语教授建议他写一本儿童书。他创作了《World War Won》并在全国学生写作和插图大赛中获得一等奖，该书于1987年出版。此后他创作了许多深受喜爱的系列作品。</p>
+                    </div>
+                    <div class="bio-section highlight">
+                        <h3>励志故事</h3>
+                        <p>Pilkey 的故事告诉我们：<strong>看似是缺点的特质，有时候反而能成为独特的优势。</strong>正是因为他在课堂上"不听话"，才有了今天这些充满想象力和幽默感的作品。他的成功激励了无数有学习障碍的孩子们——你与众不同的地方，可能正是你最大的天赋。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 英文版本 -->
+            <div class="author-content en hidden">
+                <div class="author-profile">
+                    <div class="author-image">
+                        <img src="https://pilkey.com/media_cache/userFiles/uploads/Author/max2000/dav.jpg" alt="Dav Pilkey">
+                    </div>
+                    <div class="author-quick-facts">
+                        <h3>Quick Facts</h3>
+                        <ul>
+                            <li><strong>Full Name:</strong> David Murray Pilkey Jr.</li>
+                            <li><strong>Born:</strong> March 4, 1966</li>
+                            <li><strong>Birthplace:</strong> Cleveland, Ohio, USA</li>
+                            <li><strong>Profession:</strong> Author, Illustrator</li>
+                            <li><strong>Notable Works:</strong> Captain Underpants, Dog Man, Ricky Ricotta</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="author-bio">
+                    <div class="bio-section">
+                        <h3>Origin of the Pen Name</h3>
+                        <p>Dav Pilkey's pen name originated from a funny accident. While working at Pizza Hut, his nametag accidentally read "Dav" instead of "Dave," and he adopted this unique spelling ever since.</p>
+                    </div>
+                    <div class="bio-section">
+                        <h3>Overcoming Challenges</h3>
+                        <p>Pilkey suffered from attention-deficit/hyperactivity disorder (ADHD) and dyslexia, which caused him frequent difficulties at school. He was often sent to sit in the hallway for being "disruptive" in class. But it was in that very hallway where young Pilkey began creating his own stories and comics. <strong>Both Captain Underpants and Dog Man were born in that hallway!</strong></p>
+                    </div>
+                    <div class="bio-section">
+                        <h3>Career</h3>
+                        <p>In 1984, Pilkey began attending Kent State University as an art major. During his freshman year, an English professor suggested he write a children's book. He created "World War Won" and won first place in the National Written and Illustrated by Awards Contest for Students, published in 1987. He has since created many beloved series.</p>
+                    </div>
+                    <div class="bio-section highlight">
+                        <h3>An Inspirational Story</h3>
+                        <p>Pilkey's story teaches us: <strong>What seems like a weakness can sometimes become a unique strength.</strong> It was precisely because he was "misbehaving" in class that we have these imaginative and humorous works today. His success has inspired countless children with learning disabilities—what makes you different might be your greatest gift.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dav Pilkey 其他代表作品 -->
+    <section id="other-works" class="section other-works-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">Dav Pilkey 代表作品</span>
+                <span class="en hidden">Dav Pilkey's Other Works</span>
+            </h2>
+
+            <div class="works-grid">
+                <!-- Captain Underpants -->
+                <div class="work-card featured">
+                    <div class="work-image">
+                        <img src="https://pilkey.com/userFiles/uploads/captain-underpants/Full-color-covers/CUP-1-fullcolor.png" alt="Captain Underpants">
+                        <div class="work-badge">
+                            <span class="zh">经典系列</span>
+                            <span class="en hidden">Classic</span>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <h3>Captain Underpants</h3>
+                        <p class="work-subtitle zh">内裤超人</p>
+                        <p class="work-subtitle en hidden">The Underpants Superhero</p>
+                        <div class="work-stats">
+                            <span class="work-stat"><strong>12</strong> <span class="zh">本书</span><span class="en hidden">Books</span></span>
+                            <span class="work-stat"><strong>80M+</strong> <span class="zh">销量</span><span class="en hidden">Sold</span></span>
+                            <span class="work-stat"><strong>1997</strong> <span class="zh">首发</span><span class="en hidden">Debut</span></span>
+                        </div>
+                        <p class="work-desc zh">Dav Pilkey 最著名的作品！讲述了两个四年级学生 George 和 Harold 的冒险故事，他们意外地把校长变成了穿着内裤的超级英雄。这个系列以其搞笑的故事和独特的 Flip-O-Rama 翻页动画技术而闻名。有趣的是，这个系列曾经是美国"被禁最多"的书籍第一名——因为太好笑了！2017年被改编成动画电影，全球票房1.25亿美元。</p>
+                        <p class="work-desc en hidden">Dav Pilkey's most famous work! It tells the adventures of two fourth-graders, George and Harold, who accidentally turn their principal into an underwear-wearing superhero. The series is famous for its hilarious stories and unique Flip-O-Rama animation technique. Fun fact: this series was once the #1 most banned book in America—because it was too funny! It was adapted into an animated film in 2017, earning $125 million worldwide.</p>
+                    </div>
+                </div>
+
+                <!-- Ricky Ricotta -->
+                <div class="work-card">
+                    <div class="work-image">
+                        <img src="https://pilkey.com/userFiles/uploads/ricky-ricotta-s-mighty-robot/ricky-ricotta-s-mighty-robot/Ricky-Ricotta-covers-1-280x421.png" alt="Ricky Ricotta">
+                    </div>
+                    <div class="work-info">
+                        <h3>Ricky Ricotta's Mighty Robot</h3>
+                        <p class="work-subtitle zh">瑞奇·瑞科塔的强大机器人</p>
+                        <p class="work-subtitle en hidden">The Mighty Robot Series</p>
+                        <div class="work-stats">
+                            <span class="work-stat"><strong>9</strong> <span class="zh">本书</span><span class="en hidden">Books</span></span>
+                            <span class="work-stat"><strong>2000</strong> <span class="zh">首发</span><span class="en hidden">Debut</span></span>
+                        </div>
+                        <p class="work-desc zh">讲述小老鼠 Ricky 和他的机器人朋友一起拯救世界的故事。每本书都有一个来自不同星球的外星动物反派——从水星到冥王星！有趣的是，最初这个系列叫"Giant Robot"，但小读者们指出机器人只比老鼠高12倍（约76厘米），并不算"巨大"，于是 Pilkey 改成了"Mighty"（强大的）。</p>
+                        <p class="work-desc en hidden">The story of a little mouse named Ricky and his robot friend saving the world together. Each book features an alien animal villain from a different planet—from Mercury to Pluto! Fun fact: the series was originally called "Giant Robot," but young readers pointed out the robot is only 12 times taller than a mouse (about 2.5 feet), so Pilkey changed it to "Mighty."</p>
+                    </div>
+                </div>
+
+                <!-- Cat Kid Comic Club -->
+                <div class="work-card">
+                    <div class="work-image">
+                        <img src="https://pilkey.com/userFiles/uploads/Cat_Kid_Comic_Club/CKCC_1_600px.jpg" alt="Cat Kid Comic Club">
+                    </div>
+                    <div class="work-info">
+                        <h3>Cat Kid Comic Club</h3>
+                        <p class="work-subtitle zh">猫孩漫画俱乐部</p>
+                        <p class="work-subtitle en hidden">Li'l Petey's Comic Club</p>
+                        <div class="work-stats">
+                            <span class="work-stat"><strong>5</strong> <span class="zh">本书</span><span class="en hidden">Books</span></span>
+                            <span class="work-stat"><strong>2020</strong> <span class="zh">首发</span><span class="en hidden">Debut</span></span>
+                        </div>
+                        <p class="work-desc zh">Dog Man 的衍生系列！小 Petey、Flippy 和 Molly 教21只活泼可爱的小青蛙创作漫画。这个系列展示了多种艺术技法，包括丙烯画、彩色铅笔、日本书法、摄影、拼贴画、水粉画和水彩等。是鼓励孩子们发挥创造力的绝佳作品！</p>
+                        <p class="work-desc en hidden">A spinoff of Dog Man! Li'l Petey, Flippy, and Molly teach 21 adorable baby frogs how to create comics. This series showcases various art techniques including acrylic paints, colored pencils, Japanese calligraphy, photography, collage, gouache, and watercolors. It's perfect for encouraging children's creativity!</p>
+                    </div>
+                </div>
+
+                <!-- Super Diaper Baby -->
+                <div class="work-card">
+                    <div class="work-image">
+                        <img src="https://pilkey.com/userFiles/uploads/super-diaper-baby/the-adventures-of-super-diaper-baby/sdb-book-1.png" alt="Super Diaper Baby">
+                    </div>
+                    <div class="work-info">
+                        <h3>Super Diaper Baby</h3>
+                        <p class="work-subtitle zh">超级尿布宝宝</p>
+                        <p class="work-subtitle en hidden">Captain Underpants Spinoff</p>
+                        <div class="work-stats">
+                            <span class="work-stat"><strong>2</strong> <span class="zh">本书</span><span class="en hidden">Books</span></span>
+                            <span class="work-stat"><strong>2002</strong> <span class="zh">首发</span><span class="en hidden">Debut</span></span>
+                        </div>
+                        <p class="work-desc zh">《内裤超人》系列的第一个衍生漫画小说。讲述一个穿着尿布的婴儿超级英雄的故事。这本书登上了《今日美国》畅销书榜第6名——在所有成人和儿童书籍中！</p>
+                        <p class="work-desc en hidden">The first graphic novel spinoff from Captain Underpants. It tells the story of a diaper-wearing baby superhero. This book debuted at #6 on USA Today's bestseller list for all books—both adult and children's!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 有趣故事 -->
+            <div class="fun-facts-box">
+                <h3 class="zh">有趣的创作故事</h3>
+                <h3 class="en hidden">Fun Creation Stories</h3>
+                <div class="fun-facts-grid">
+                    <div class="fun-fact">
+                        <span class="fun-fact-icon">🏫</span>
+                        <p class="zh"><strong>走廊里的创作：</strong>Pilkey 小时候因为 ADHD 经常被罚站在走廊，他就在那里创作了 Captain Underpants 和 Dog Man 的原型。老师的"惩罚"反而成就了他的创作天赋！</p>
+                        <p class="en hidden"><strong>Hallway Creations:</strong> Young Pilkey was often sent to the hallway due to ADHD, where he created the prototypes for Captain Underpants and Dog Man. The teacher's "punishment" actually nurtured his creative talent!</p>
+                    </div>
+                    <div class="fun-fact">
+                        <span class="fun-fact-icon">📖</span>
+                        <p class="zh"><strong>Flip-O-Rama 的诞生：</strong>这种让静态漫画"动起来"的翻页技术，是 Pilkey 从小就在课桌上画的翻页动画演变而来的，现在成为了他所有作品的标志性特色。</p>
+                        <p class="en hidden"><strong>Birth of Flip-O-Rama:</strong> This technique that makes static comics "come alive" evolved from flip animations Pilkey drew on his desk as a child, now a signature feature of all his works.</p>
+                    </div>
+                    <div class="fun-fact">
+                        <span class="fun-fact-icon">❤️</span>
+                        <p class="zh"><strong>暂停创作的原因：</strong>2006-2012年间，第9本《内裤超人》延迟了6年才出版，因为 Pilkey 在照顾他身患绝症的父亲。父亲于2008年去世后，他才慢慢恢复创作。</p>
+                        <p class="en hidden"><strong>A Creative Pause:</strong> Between 2006-2012, Captain Underpants book 9 was delayed for 6 years because Pilkey was caring for his terminally ill father, who passed away in 2008. He slowly resumed writing afterward.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 主要角色 -->
+    <section id="characters" class="section characters-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">主要角色</span>
+                <span class="en hidden">Main Characters</span>
+            </h2>
+
+            <div class="characters-grid">
+                <!-- Dog Man -->
+                <div class="character-card hero-character">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man">
+                    </div>
+                    <div class="character-info">
+                        <h3>Dog Man</h3>
+                        <p class="character-role zh">半人半狗的超级英雄警察</p>
+                        <p class="character-role en hidden">Half-Man, Half-Dog Superhero Cop</p>
+                        <p class="character-desc zh">由警察 Knight 和警犬 Greg 合体而成。拥有 Knight 的打击犯罪技能，但性格像狗一样单纯可爱——喜欢舔人、追球、害怕吸尘器！虽然不会说话，但他是城市最可靠的守护者。</p>
+                        <p class="character-desc en hidden">Created from the fusion of Officer Knight and police dog Greg. Has Knight's crime-fighting skills but Greg's personality—loves licking people, chasing balls, and is afraid of vacuum cleaners! Though he can't speak, he's the city's most reliable guardian.</p>
+                    </div>
+                </div>
+
+                <!-- Petey -->
+                <div class="character-card villain-character">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-a-tale-of-two-kitties-dog-man-3/Dogman_3.jpg" alt="Petey">
+                    </div>
+                    <div class="character-info">
+                        <h3>Petey</h3>
+                        <p class="character-role zh">曾经的"世界最邪恶的猫"</p>
+                        <p class="character-role en hidden">Former "World's Most Evil Cat"</p>
+                        <p class="character-desc zh">Dog Man 的宿敌，一只野心勃勃的橙色条纹猫。但他邪恶的外表下隐藏着因童年被父亲忽视而造成的情感创伤。后来他放弃了邪恶，成为了小 Petey 的好父亲，完成了从反派到英雄的感人转变。</p>
+                        <p class="character-desc en hidden">Dog Man's arch-nemesis, an ambitious orange striped cat. But beneath his evil exterior lies deep emotional trauma from being neglected by his father in childhood. He eventually abandons his villainous ways to become a loving father to Li'l Petey, completing a touching transformation from villain to hero.</p>
+                    </div>
+                </div>
+
+                <!-- Li'l Petey -->
+                <div class="character-card">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dogman4/DogManCatKid.jpeg" alt="Li'l Petey">
+                    </div>
+                    <div class="character-info">
+                        <h3>Li'l Petey (小 Petey)</h3>
+                        <p class="character-role zh">纯真善良的小猫</p>
+                        <p class="character-role en hidden">Pure and Kind Kitten</p>
+                        <p class="character-desc zh">Petey 想要一个管家而订购了克隆机器，却意外创造出了这个可爱的小克隆体。与 Petey 不同，小 Petey 心地善良，没有一丝邪念。他是超级伙伴团队的领袖，也是 Cat Kid Comic Club 的主席。</p>
+                        <p class="character-desc en hidden">Petey ordered a cloning machine wanting a butler, but accidentally created this adorable little clone. Unlike Petey, Li'l Petey is kind-hearted without a mean bone in his body. He's the leader of the Supa Buddies and president of the Cat Kid Comic Club.</p>
+                    </div>
+                </div>
+
+                <!-- 80-HD -->
+                <div class="character-card">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-lord-of-the-fleas/DM5.jpg" alt="80-HD">
+                    </div>
+                    <div class="character-info">
+                        <h3>80-HD</h3>
+                        <p class="character-role zh">忠诚的机器人伙伴</p>
+                        <p class="character-role en hidden">Loyal Robot Companion</p>
+                        <p class="character-desc zh">由 Petey 创造的机器人，后来成为超级伙伴团队的核心成员。80-HD 是小 Petey 最好的朋友，他们一起和 Dog Man 组成了正义的超级英雄团队 Supa Buddies。</p>
+                        <p class="character-desc en hidden">A robot created by Petey who became a core member of the Supa Buddies. 80-HD is Li'l Petey's best friend, and together with Dog Man, they form the righteous superhero team, the Supa Buddies.</p>
+                    </div>
+                </div>
+
+                <!-- Chief -->
+                <div class="character-card">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-unleashed/DogManUnleashed.jpg" alt="Chief">
+                    </div>
+                    <div class="character-info">
+                        <h3>Chief (警长)</h3>
+                        <p class="character-role zh">长期受苦的警察局长</p>
+                        <p class="character-role en hidden">Long-Suffering Police Chief</p>
+                        <p class="character-desc zh">全名 Clarence Bailey，是 Dog Man 的上司。虽然经常被 Dog Man 的狗狗行为弄得哭笑不得（比如舔脸、追松鼠），但他深知 Dog Man 是队里最优秀的警察。</p>
+                        <p class="character-desc en hidden">Full name Clarence Bailey, Dog Man's boss. Though often exasperated by Dog Man's canine behavior (like licking faces, chasing squirrels), he knows Dog Man is the best cop on the force.</p>
+                    </div>
+                </div>
+
+                <!-- Flippy -->
+                <div class="character-card">
+                    <div class="character-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/Dog_Man_For_Whom_the_Ball_Rolls/DM_7.jpg" alt="Flippy">
+                    </div>
+                    <div class="character-info">
+                        <h3>Flippy</h3>
+                        <p class="character-role zh">有超能力的改过自新鱼</p>
+                        <p class="character-role en hidden">Reformed Telekinetic Fish</p>
+                        <p class="character-desc zh">一条拥有心灵感应能力的鱼，曾经是反派，后来改过自新成为了好人。在2025年的电影中由 Ricky Gervais 配音。</p>
+                        <p class="character-desc en hidden">A fish with telekinetic powers who was once a villain but has since reformed. Voiced by Ricky Gervais in the 2025 film.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 书籍系列 -->
+    <section id="books" class="section books-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">书籍系列 (共14本)</span>
+                <span class="en hidden">Book Series (14 Books)</span>
+            </h2>
+
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man #1">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#1</span>
+                        <h3>Dog Man</h3>
+                        <p class="book-year">2016</p>
+                        <p class="book-desc zh">系列首作，介绍了 Dog Man 的诞生故事</p>
+                        <p class="book-desc en hidden">Series debut, introducing Dog Man's origin story</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-unleashed/DogManUnleashed.jpg" alt="Dog Man Unleashed">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#2</span>
+                        <h3>Dog Man Unleashed</h3>
+                        <p class="book-year">2016</p>
+                        <p class="book-desc zh">Dog Man 继续打击犯罪的冒险</p>
+                        <p class="book-desc en hidden">Dog Man continues his crime-fighting adventures</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-a-tale-of-two-kitties-dog-man-3/Dogman_3.jpg" alt="A Tale of Two Kitties">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#3</span>
+                        <h3>A Tale of Two Kitties</h3>
+                        <p class="book-year">2017</p>
+                        <p class="book-desc zh">小 Petey 首次登场</p>
+                        <p class="book-desc en hidden">Li'l Petey makes his debut</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dogman4/DogManCatKid.jpeg" alt="Dog Man and Cat Kid">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#4</span>
+                        <h3>Dog Man and Cat Kid</h3>
+                        <p class="book-year">2017</p>
+                        <p class="book-desc zh">Dog Man 收养了小 Petey</p>
+                        <p class="book-desc en hidden">Dog Man adopts Li'l Petey</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-lord-of-the-fleas/DM5.jpg" alt="Lord of the Fleas">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#5</span>
+                        <h3>Lord of the Fleas</h3>
+                        <p class="book-year">2018</p>
+                        <p class="book-desc zh">超级伙伴团队成立</p>
+                        <p class="book-desc en hidden">The Supa Buddies team forms</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/z8638_dogmanbrawlo_4cc-high-res-rgb.jpg" alt="Brawl of the Wild">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#6</span>
+                        <h3>Brawl of the Wild</h3>
+                        <p class="book-year">2018</p>
+                        <p class="book-desc zh">英雄们面临新挑战</p>
+                        <p class="book-desc en hidden">Heroes face new challenges</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/Dog_Man_For_Whom_the_Ball_Rolls/DM_7.jpg" alt="For Whom the Ball Rolls">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#7</span>
+                        <h3>For Whom the Ball Rolls</h3>
+                        <p class="book-year">2019</p>
+                        <p class="book-desc zh">更多冒险等待着 Dog Man</p>
+                        <p class="book-desc en hidden">More adventures await Dog Man</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/af047_dogman8_4cc-high-res-rgb.jpg" alt="Fetch-22">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#8</span>
+                        <h3>Fetch-22</h3>
+                        <p class="book-year">2019</p>
+                        <p class="book-desc zh">Petey 的救赎之旅</p>
+                        <p class="book-desc en hidden">Petey's redemption journey</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/Dog_Man_9_Grime_and_Punishment/700.jpg" alt="Grime and Punishment">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#9</span>
+                        <h3>Grime and Punishment</h3>
+                        <p class="book-year">2020</p>
+                        <p class="book-desc zh">新的反派登场</p>
+                        <p class="book-desc en hidden">New villains appear</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/mothering-heights/MH_sch.jpg" alt="Mothering Heights">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#10</span>
+                        <h3>Mothering Heights</h3>
+                        <p class="book-year">2021</p>
+                        <p class="book-desc zh">关于家庭和爱的故事 · 2021年美国销量第一</p>
+                        <p class="book-desc en hidden">Story about family and love · #1 bestseller in USA 2021</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/DM_11_twenty-thousand-fleas-under-the-sea.jpeg" alt="Twenty Thousand Fleas Under the Sea">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#11</span>
+                        <h3>Twenty Thousand Fleas Under the Sea</h3>
+                        <p class="book-year">2023</p>
+                        <p class="book-desc zh">水下大冒险</p>
+                        <p class="book-desc en hidden">Underwater adventure</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/Dog-Man_12_-The-Scarlet-Shedder.jpeg" alt="The Scarlet Shedder">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#12</span>
+                        <h3>The Scarlet Shedder</h3>
+                        <p class="book-year">2024</p>
+                        <p class="book-desc zh">神秘新敌人出现 · 2024年销量126万册</p>
+                        <p class="book-desc en hidden">Mysterious new enemy · Sold 1.26M copies in 2024</p>
+                    </div>
+                </div>
+
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/mdm-p-16318183-dogmanbigjim-4cc.webp" alt="Big Jim Begins">
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#13</span>
+                        <h3>Big Jim Begins</h3>
+                        <p class="book-year">2024</p>
+                        <p class="book-desc zh">Big Jim 的起源故事 · 销量250万册</p>
+                        <p class="book-desc en hidden">Big Jim's origin story · Sold 2.5M copies</p>
+                    </div>
+                </div>
+
+                <div class="book-card new-release">
+                    <div class="book-cover">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/mdm-p-16318183-dogmanbigjim-4cc.webp" alt="Big Jim Believes">
+                        <span class="new-badge zh">最新</span>
+                        <span class="new-badge en hidden">NEW</span>
+                    </div>
+                    <div class="book-info">
+                        <span class="book-number">#14</span>
+                        <h3>Big Jim Believes</h3>
+                        <p class="book-year">2025</p>
+                        <p class="book-desc zh">系列最新作品 · 2025年11月11日发售</p>
+                        <p class="book-desc en hidden">Latest book · Released November 11, 2025</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 衍生作品提示 -->
+            <div class="spinoff-notice">
+                <h3 class="zh">衍生系列</h3>
+                <h3 class="en hidden">Spinoff Series</h3>
+                <p class="zh"><strong>Cat Kid Comic Club</strong> 是 Dog Man 的衍生系列，讲述小 Petey 教其他小动物们创作漫画的故事。</p>
+                <p class="en hidden"><strong>Cat Kid Comic Club</strong> is a spinoff of Dog Man, telling the story of Li'l Petey teaching other young animals how to create comics.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 业界影响力 -->
+    <section id="impact" class="section impact-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">业界影响力</span>
+                <span class="en hidden">Industry Impact</span>
+            </h2>
+
+            <!-- 中文版本 -->
+            <div class="impact-content zh">
+                <div class="impact-stats">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value">7000万+</div>
+                        <div class="stat-desc">全球销量</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">🌍</div>
+                        <div class="stat-value">47</div>
+                        <div class="stat-desc">翻译语言数量</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">14次</div>
+                        <div class="stat-desc">畅销榜冠军</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value">13%</div>
+                        <div class="stat-desc">2020年漫画市场占比</div>
+                    </div>
+                </div>
+
+                <div class="impact-highlights">
+                    <h3>重要成就</h3>
+                    <ul class="achievement-list">
+                        <li>
+                            <span class="year">2021</span>
+                            <span class="achievement">《Mothering Heights》成为美国全年销量第一的书籍（儿童和成人书籍合计）</span>
+                        </li>
+                        <li>
+                            <span class="year">2024</span>
+                            <span class="achievement">《The Scarlet Shedder》在美国销售126万册，成为年度第三畅销书</span>
+                        </li>
+                        <li>
+                            <span class="year">2024</span>
+                            <span class="achievement">《Big Jim Begins》发售后销量达到250万册</span>
+                        </li>
+                        <li>
+                            <span class="year">全球</span>
+                            <span class="achievement">每一本 Dog Man 书籍在首发周都登上了全球多国畅销榜冠军</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="impact-quote">
+                    <blockquote>
+                        "Dog Man 系列是全球儿童出版业图画小说类别的主要增长动力。"
+                        <cite>— 学乐出版社 CEO</cite>
+                    </blockquote>
+                </div>
+            </div>
+
+            <!-- 英文版本 -->
+            <div class="impact-content en hidden">
+                <div class="impact-stats">
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value">70M+</div>
+                        <div class="stat-desc">Copies Sold Worldwide</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">🌍</div>
+                        <div class="stat-value">47</div>
+                        <div class="stat-desc">Languages Translated</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">14x</div>
+                        <div class="stat-desc">#1 Bestseller</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value">13%</div>
+                        <div class="stat-desc">Comic Market Share 2020</div>
+                    </div>
+                </div>
+
+                <div class="impact-highlights">
+                    <h3>Key Achievements</h3>
+                    <ul class="achievement-list">
+                        <li>
+                            <span class="year">2021</span>
+                            <span class="achievement">"Mothering Heights" became the #1 bestselling book in the USA overall (children's and adult combined)</span>
+                        </li>
+                        <li>
+                            <span class="year">2024</span>
+                            <span class="achievement">"The Scarlet Shedder" sold 1.26 million copies in the USA, becoming the year's 3rd bestselling book</span>
+                        </li>
+                        <li>
+                            <span class="year">2024</span>
+                            <span class="achievement">"Big Jim Begins" sold 2.5 million copies since release</span>
+                        </li>
+                        <li>
+                            <span class="year">Global</span>
+                            <span class="achievement">Every Dog Man book has debuted at #1 on bestseller lists across multiple countries</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="impact-quote">
+                    <blockquote>
+                        "Dog Man is a major growth driver in the graphic novel category of children's publishing globally."
+                        <cite>— Scholastic CEO</cite>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 衍生作品 -->
+    <section id="media" class="section media-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="zh">衍生作品</span>
+                <span class="en hidden">Expanded Media</span>
+            </h2>
+
+            <div class="media-grid">
+                <!-- 电影 -->
+                <div class="media-card movie-card">
+                    <div class="media-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man Movie">
+                        <div class="media-overlay">
+                            <span class="media-type zh">动画电影</span>
+                            <span class="media-type en hidden">Animated Film</span>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>Dog Man: The Movie</h3>
+                        <p class="release-date zh">2025年1月31日上映</p>
+                        <p class="release-date en hidden">Released January 31, 2025</p>
+                        <p class="media-desc zh">由环球影业和梦工厂动画联合出品，Peter Hastings 编剧和导演。电影获得了积极的评价。</p>
+                        <p class="media-desc en hidden">Produced by Universal Pictures and DreamWorks Animation, written and directed by Peter Hastings. The film received positive reviews.</p>
+                        <div class="cast-info">
+                            <h4 class="zh">配音阵容</h4>
+                            <h4 class="en hidden">Voice Cast</h4>
+                            <ul>
+                                <li><strong>Pete Davidson</strong> - Petey</li>
+                                <li><strong>Lil Rel Howery</strong> - Chief</li>
+                                <li><strong>Isla Fisher</strong> - Sarah Hatoff</li>
+                                <li><strong>Ricky Gervais</strong> - Flippy</li>
+                                <li><strong>Lucas Hopkins Calderon</strong> - Li'l Petey</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 音乐剧 -->
+                <div class="media-card">
+                    <div class="media-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-unleashed/DogManUnleashed.jpg" alt="Dog Man Musical">
+                        <div class="media-overlay">
+                            <span class="media-type zh">音乐剧</span>
+                            <span class="media-type en hidden">Musical</span>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>Dog Man: The Musical</h3>
+                        <p class="release-date zh">2019年首演</p>
+                        <p class="release-date en hidden">Premiered 2019</p>
+                        <p class="media-desc zh">由 TheatreWorksUSA 制作的外百老汇音乐剧。在纽约首演后，开始了北美巡演，2023年重返外百老汇。截至2025年，音乐剧继续在美国各地巡演。</p>
+                        <p class="media-desc en hidden">An Off-Broadway musical produced by TheatreWorksUSA. After debuting in New York City, the musical embarked on a North American tour, returning to Off-Broadway in 2023. As of 2025, it continues to tour venues throughout the United States.</p>
+                    </div>
+                </div>
+
+                <!-- 视频游戏 -->
+                <div class="media-card">
+                    <div class="media-image">
+                        <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man-lord-of-the-fleas/DM5.jpg" alt="Dog Man Game">
+                        <div class="media-overlay">
+                            <span class="media-type zh">视频游戏</span>
+                            <span class="media-type en hidden">Video Game</span>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3>Dog Man: Mission Impawsible</h3>
+                        <p class="release-date zh">2024年12月6日发售</p>
+                        <p class="release-date en hidden">Released December 6, 2024</p>
+                        <p class="media-desc zh">由 Mindscape 开发的视频游戏，让玩家可以体验 Dog Man 的冒险世界。</p>
+                        <p class="media-desc en hidden">A video game developed by Mindscape, allowing players to experience Dog Man's adventure world.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="zh">关于本站</h4>
+                    <h4 class="en hidden">About This Site</h4>
+                    <p class="zh">这是一个由粉丝创建的 Dog Man 介绍网站，旨在向读者介绍这个精彩的绘本系列。</p>
+                    <p class="en hidden">This is a fan-created Dog Man introduction website, aimed at introducing this wonderful graphic novel series to readers.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="zh">官方链接</h4>
+                    <h4 class="en hidden">Official Links</h4>
+                    <ul>
+                        <li><a href="https://pilkey.com" target="_blank">Dav Pilkey Official</a></li>
+                        <li><a href="https://www.scholastic.com/site/dav-pilkey-books/dog-man-books.html" target="_blank">Scholastic - Dog Man</a></li>
+                        <li><a href="https://www.instagram.com/dav_pilkey/" target="_blank">Instagram @dav_pilkey</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="zh">免责声明</h4>
+                    <h4 class="en hidden">Disclaimer</h4>
+                    <p class="zh">Dog Man 及相关角色版权归 Dav Pilkey 和学乐出版社 (Scholastic) 所有。本网站仅供学习交流使用。</p>
+                    <p class="en hidden">Dog Man and related characters are copyrighted by Dav Pilkey and Scholastic. This website is for educational purposes only.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Dog Man Fan Site</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
