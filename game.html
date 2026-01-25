@@ -4295,86 +4295,96 @@
         // ===== Sarah 记者 (回旋镖技能) =====
         function drawSarah(r) {
             const scale = r / 21;
+
+            // 回旋光环效果（先画，在底层）
+            const angle = frameCount * 0.15;
+            ctx.save();
+            ctx.strokeStyle = 'rgba(233, 30, 99, 0.6)';
+            ctx.lineWidth = 3 * scale;
+            ctx.beginPath();
+            ctx.arc(0, 0, 28 * scale, angle, angle + Math.PI * 0.8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(0, 0, 28 * scale, angle + Math.PI, angle + Math.PI * 1.8);
+            ctx.stroke();
+            ctx.restore();
+
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2 * scale;
+
+            // 头发 (棕色长发) - 先画头发背景
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(-8 * scale, 0, 5 * scale, 12 * scale, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(8 * scale, 0, 5 * scale, 12 * scale, -0.2, 0, Math.PI * 2);
+            ctx.fill();
 
             // 身体 (粉色套装)
             ctx.fillStyle = '#E91E63';
             ctx.beginPath();
-            ctx.ellipse(0, 8 * scale, 12 * scale, 11 * scale, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // 麦克风
-            ctx.fillStyle = '#333';
-            ctx.beginPath();
-            ctx.roundRect(-18 * scale, 3 * scale, 8 * scale, 4 * scale, 2 * scale);
-            ctx.fill();
-            ctx.fillStyle = '#666';
-            ctx.beginPath();
-            ctx.arc(-21 * scale, 5 * scale, 4 * scale, 0, Math.PI * 2);
+            ctx.ellipse(0, 10 * scale, 10 * scale, 9 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
 
             // 头
             ctx.fillStyle = '#FFDAB9';
             ctx.beginPath();
-            ctx.arc(0, -8 * scale, 11 * scale, 0, Math.PI * 2);
+            ctx.arc(0, -5 * scale, 12 * scale, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
 
-            // 头发 (棕色长发)
+            // 头发 (棕色刘海)
             ctx.fillStyle = '#8B4513';
             ctx.beginPath();
-            ctx.arc(0, -12 * scale, 12 * scale, Math.PI, 0);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(-10 * scale, -2 * scale, 4 * scale, 10 * scale, 0.2, 0, Math.PI * 2);
-            ctx.ellipse(10 * scale, -2 * scale, 4 * scale, 10 * scale, -0.2, 0, Math.PI * 2);
+            ctx.arc(0, -10 * scale, 13 * scale, Math.PI + 0.3, -0.3);
             ctx.fill();
 
             // 眼睛
             ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
-            ctx.ellipse(-4 * scale, -9 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
-            ctx.ellipse(4 * scale, -9 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.ellipse(-4 * scale, -6 * scale, 3.5 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.ellipse(4 * scale, -6 * scale, 3.5 * scale, 4 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
 
+            // 瞳孔
             ctx.fillStyle = '#4169E1';
             ctx.beginPath();
-            ctx.arc(-4 * scale, -9 * scale, 1.5 * scale, 0, Math.PI * 2);
-            ctx.arc(4 * scale, -9 * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.arc(-4 * scale, -6 * scale, 2 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(4 * scale, -6 * scale, 2 * scale, 0, Math.PI * 2);
             ctx.fill();
 
-            // 睫毛
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1 * scale;
+            // 眼睛高光
+            ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
-            ctx.moveTo(-6 * scale, -13 * scale);
-            ctx.lineTo(-7 * scale, -15 * scale);
-            ctx.moveTo(-4 * scale, -13 * scale);
-            ctx.lineTo(-4 * scale, -15 * scale);
-            ctx.moveTo(4 * scale, -13 * scale);
-            ctx.lineTo(4 * scale, -15 * scale);
-            ctx.moveTo(6 * scale, -13 * scale);
-            ctx.lineTo(7 * scale, -15 * scale);
-            ctx.stroke();
+            ctx.arc(-5 * scale, -7 * scale, 1 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(3 * scale, -7 * scale, 1 * scale, 0, Math.PI * 2);
+            ctx.fill();
 
             // 嘴巴 (微笑)
             ctx.strokeStyle = '#C71585';
             ctx.lineWidth = 2 * scale;
             ctx.beginPath();
-            ctx.arc(0, -4 * scale, 4 * scale, 0.3, Math.PI - 0.3);
+            ctx.arc(0, -1 * scale, 4 * scale, 0.2, Math.PI - 0.2);
             ctx.stroke();
 
-            // 回旋效果
-            const angle = frameCount * 0.1;
-            ctx.strokeStyle = 'rgba(233, 30, 99, 0.5)';
-            ctx.lineWidth = 2 * scale;
+            // 腮红
+            ctx.fillStyle = 'rgba(255, 150, 150, 0.4)';
             ctx.beginPath();
-            ctx.arc(0, 0, 26 * scale, angle, angle + Math.PI);
-            ctx.stroke();
+            ctx.ellipse(-8 * scale, -3 * scale, 3 * scale, 2 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(8 * scale, -3 * scale, 3 * scale, 2 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
         }
 
         function drawVillain(villain) {
@@ -6657,23 +6667,52 @@
                     // Sarah 回旋镖技能 - 返回并再次攻击
                     projectile.specialUsed = true;
                     projectile.boomerangActive = true;
-                    playSimpleSound(600, 0.15, 'sine');
-                    playSimpleSound(800, 0.15, 'sine');
 
-                    // 反转速度并加速
-                    projectile.vx = -projectile.vx * 1.3;
-                    projectile.vy = -projectile.vy * 0.5 - 5;
+                    // 音效
+                    playSimpleSound(600, 0.2, 'sine');
+                    setTimeout(() => playSimpleSound(800, 0.15, 'sine'), 50);
+                    setTimeout(() => playSimpleSound(1000, 0.1, 'sine'), 100);
 
-                    // 回旋特效
-                    for (let i = 0; i < 20; i++) {
-                        const angle = (i / 20) * Math.PI * 2;
+                    // 反转速度并加速（更强的回旋效果）
+                    const currentSpeed = Math.sqrt(projectile.vx ** 2 + projectile.vy ** 2);
+                    projectile.vx = -projectile.vx * 1.5;
+                    projectile.vy = -Math.abs(projectile.vy) * 0.8 - 8;
+
+                    // 增加旋转速度
+                    projectile.rotationSpeed = 0.5;
+
+                    // 冲击波效果
+                    if (!window.shockwaves) window.shockwaves = [];
+                    window.shockwaves.push({
+                        x: projectile.x, y: projectile.y,
+                        radius: 5, maxRadius: 100,
+                        color: 'rgba(233, 30, 99, 0.6)', lineWidth: 6
+                    });
+
+                    // 回旋粒子特效（更多更亮）
+                    for (let i = 0; i < 30; i++) {
+                        const angle = (i / 30) * Math.PI * 2;
+                        const speed = 6 + Math.random() * 4;
                         particles.push({
                             x: projectile.x,
                             y: projectile.y,
-                            vx: Math.cos(angle) * 5,
-                            vy: Math.sin(angle) * 5,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed,
+                            size: 5 + Math.random() * 6,
+                            color: i % 2 === 0 ? '#E91E63' : '#FF69B4',
+                            alpha: 1
+                        });
+                    }
+
+                    // 尾迹粒子
+                    for (let i = 0; i < 15; i++) {
+                        particles.push({
+                            x: projectile.x + (Math.random() - 0.5) * 20,
+                            y: projectile.y + (Math.random() - 0.5) * 20,
+                            vx: projectile.vx * 0.3 + (Math.random() - 0.5) * 3,
+                            vy: projectile.vy * 0.3 + (Math.random() - 0.5) * 3,
                             size: 4 + Math.random() * 4,
-                            color: '#E91E63',
+                            color: '#FFB6C1',
                             alpha: 1
                         });
                     }
