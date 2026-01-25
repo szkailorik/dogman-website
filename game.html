@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Dog Man: Supa Buddies Slingshot | 超级伙伴弹弓大战</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -478,6 +481,159 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
+
+        /* 手机全屏模式 */
+        @media (max-width: 768px) {
+            .game-nav {
+                padding: 8px 15px;
+            }
+            .nav-brand span {
+                font-size: 1.2rem;
+            }
+            .back-btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            .game-container {
+                padding: 60px 5px 10px;
+            }
+            .game-title {
+                font-size: 1.5rem;
+                margin-bottom: 3px;
+            }
+            .game-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 8px;
+            }
+            .game-header {
+                padding: 8px 12px;
+                margin-bottom: 5px;
+            }
+            .info-box {
+                padding: 3px 10px;
+            }
+            .info-label {
+                font-size: 0.65rem;
+            }
+            .info-value {
+                font-size: 1.2rem;
+            }
+            .game-wrapper {
+                padding: 4px;
+                width: 100%;
+            }
+            #gameCanvas {
+                width: 100% !important;
+                max-width: 100vw;
+                touch-action: none;
+            }
+            .buddies-panel {
+                padding: 8px 12px;
+                gap: 5px;
+                margin-top: 8px;
+            }
+            .buddy-slot {
+                width: 45px;
+                height: 45px;
+                font-size: 1.4rem;
+            }
+            .game-controls {
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .control-btn {
+                padding: 10px 18px;
+                font-size: 0.85rem;
+            }
+            .instructions {
+                display: none;
+            }
+        }
+
+        /* 横屏全屏模式 */
+        @media (max-width: 950px) and (orientation: landscape) {
+            .game-nav {
+                padding: 5px 15px;
+            }
+            .nav-brand img {
+                width: 30px;
+                height: 30px;
+            }
+            .nav-brand span {
+                font-size: 1rem;
+            }
+            .game-container {
+                padding: 45px 10px 5px;
+            }
+            .game-title, .game-subtitle {
+                display: none;
+            }
+            .game-header {
+                padding: 5px 15px;
+                margin-bottom: 5px;
+            }
+            .game-wrapper {
+                padding: 3px;
+            }
+            #gameCanvas {
+                max-height: calc(100vh - 120px);
+                width: auto !important;
+                height: calc(100vh - 120px) !important;
+            }
+            .buddies-panel {
+                position: fixed;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                flex-direction: column;
+                margin-top: 0;
+                padding: 8px;
+                z-index: 50;
+            }
+            .buddy-slot {
+                width: 40px;
+                height: 40px;
+            }
+            .game-controls {
+                position: fixed;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: 0;
+            }
+            .control-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            .instructions {
+                display: none;
+            }
+        }
+
+        /* 全屏按钮 */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        @media (max-width: 950px) {
+            .fullscreen-btn {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -529,6 +685,9 @@
             <button class="control-btn btn-next" id="nextLevelBtn" onclick="nextLevel()" disabled>下一关</button>
             <button class="control-btn btn-levels" onclick="showLevelSelect()">选择关卡</button>
         </div>
+
+        <!-- 全屏按钮 -->
+        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
 
         <div class="instructions">
             <h3>游戏说明</h3>
@@ -898,6 +1057,9 @@
         function playVillainDefeatSound(type) {
             if (!soundEnabled) return;
             initAudio();
+            // 先播放惨叫声
+            playScreamSound(type);
+
             switch(type) {
                 case 'petey':
                     playPeteyDefeat();
@@ -905,6 +1067,7 @@
                     break;
                 case 'flatpetey':
                     playPaperTear();
+                    playFlatScream();
                     break;
                 case 'piggy':
                     playPigSqueal();
@@ -915,6 +1078,39 @@
                 default:
                     playPeteyDefeat();
             }
+        }
+
+        // 惨叫声 - 根据敌人类型
+        function playScreamSound(type) {
+            const baseFreq = type === 'piggy' ? 600 : type === 'robot' ? 200 : 800;
+
+            // 主惨叫 - 下降音调
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    createSound({
+                        frequencies: [baseFreq - i * 100 + Math.random() * 50],
+                        durations: [0.15 + i * 0.05],
+                        types: [type === 'robot' ? 'square' : 'sawtooth'],
+                        volumes: [0.4 - i * 0.08],
+                        delays: [0],
+                        freqSlide: [baseFreq - i * 150 - 200],
+                        filterFreq: 3000 - i * 400
+                    });
+                }, i * 80);
+            }
+        }
+
+        // 扁平猫惨叫
+        function playFlatScream() {
+            createSound({
+                frequencies: [1200, 800, 500],
+                durations: [0.1, 0.15, 0.2],
+                types: ['sine', 'sine', 'sine'],
+                volumes: [0.3, 0.25, 0.15],
+                delays: [0, 100, 200],
+                freqSlide: [600, 300, 150],
+                filterFreq: 4000
+            });
         }
 
         // Petey击败
@@ -930,20 +1126,32 @@
             });
         }
 
-        // 机器人击败
+        // 机器人击败 - 电子惨叫
         function playRobotDefeat() {
-            for (let i = 0; i < 5; i++) {
+            // 电子短路声
+            for (let i = 0; i < 6; i++) {
                 setTimeout(() => {
                     createSound({
-                        frequencies: [300 - i * 40],
-                        durations: [0.12],
+                        frequencies: [400 - i * 50 + Math.random() * 100],
+                        durations: [0.08 + Math.random() * 0.05],
                         types: ['square'],
-                        volumes: [0.25 - i * 0.03],
+                        volumes: [0.3 - i * 0.04],
                         delays: [0],
-                        filterFreq: 1000 - i * 150
+                        filterFreq: 800 - i * 100
                     });
-                }, i * 100);
+                }, i * 70);
             }
+            // 爆炸声
+            setTimeout(() => {
+                createSound({
+                    frequencies: [100, 80, 60],
+                    durations: [0.2, 0.15, 0.2],
+                    types: ['sawtooth', 'square', 'sine'],
+                    volumes: [0.35, 0.3, 0.2],
+                    delays: [0, 50, 100],
+                    filterFreq: 500
+                });
+            }, 300);
         }
 
         // 分裂技能
@@ -3168,9 +3376,37 @@
             ctx.translate(buddy.x, buddy.y);
             ctx.rotate(buddy.rotation || 0);
 
-            // 外发光效果
-            if (buddy.special && !buddy.specialUsed && buddy.active) {
-                ctx.shadowColor = buddy.type === 'lilpetey' ? '#FFD700' : '#00FFFF';
+            // Flippy紫光加速效果
+            if (buddy.boostActive && buddy.type === 'flippy') {
+                // 强烈紫色光晕
+                ctx.shadowColor = '#E040FB';
+                ctx.shadowBlur = 35 + Math.sin(frameCount * 0.2) * 15;
+
+                // 多层紫色光环
+                const pulseSize = 1 + Math.sin(frameCount * 0.15) * 0.2;
+                ctx.strokeStyle = '#9C27B0';
+                ctx.lineWidth = 4;
+                ctx.globalAlpha = 0.5;
+                ctx.beginPath();
+                ctx.arc(0, 0, buddy.radius * 1.8 * pulseSize, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#E040FB';
+                ctx.globalAlpha = 0.3;
+                ctx.beginPath();
+                ctx.arc(0, 0, buddy.radius * 2.2 * pulseSize, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#AA00FF';
+                ctx.globalAlpha = 0.2;
+                ctx.beginPath();
+                ctx.arc(0, 0, buddy.radius * 2.6 * pulseSize, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+            // 普通外发光效果
+            else if (buddy.special && !buddy.specialUsed && buddy.active) {
+                ctx.shadowColor = buddy.type === 'lilpetey' ? '#FFD700' : buddy.type === 'flippy' ? '#9C27B0' : '#00FFFF';
                 ctx.shadowBlur = 15 + Math.sin(frameCount * 0.15) * 5;
             }
 
@@ -4740,6 +4976,35 @@
             p.rotationSpeed = p.vx * 0.02;
             p.rotation += p.rotationSpeed;
 
+            // Flippy紫光尾迹 - 加速后持续产生
+            if (p.boostActive && p.type === 'flippy') {
+                // 每帧产生紫光粒子
+                if (frameCount % 2 === 0) {
+                    particles.push({
+                        x: p.x + (Math.random() - 0.5) * 10,
+                        y: p.y + (Math.random() - 0.5) * 10,
+                        vx: -p.vx * 0.05 + (Math.random() - 0.5) * 2,
+                        vy: -p.vy * 0.05 + (Math.random() - 0.5) * 2,
+                        size: 8 + Math.random() * 8,
+                        color: ['#9C27B0', '#E040FB', '#AA00FF'][Math.floor(Math.random() * 3)],
+                        alpha: 0.9
+                    });
+                }
+                // 念力光环粒子
+                if (frameCount % 4 === 0) {
+                    const angle = Math.random() * Math.PI * 2;
+                    particles.push({
+                        x: p.x + Math.cos(angle) * 20,
+                        y: p.y + Math.sin(angle) * 20,
+                        vx: Math.cos(angle) * 2,
+                        vy: Math.sin(angle) * 2,
+                        size: 4 + Math.random() * 4,
+                        color: '#E040FB',
+                        alpha: 0.7
+                    });
+                }
+            }
+
             // 边界
             if (p.x < -60 || p.x > canvas.width + 60) {
                 p.active = false;
@@ -5743,21 +6008,44 @@
                     }
                 } else if (projectile.special === 'boost') {
                     projectile.specialUsed = true;
+                    projectile.boostActive = true; // 标记紫光激活
                     playBoostSound();
                     const speed = Math.sqrt(projectile.vx ** 2 + projectile.vy ** 2);
                     const angle = Math.atan2(projectile.vy, projectile.vx);
                     projectile.vx = Math.cos(angle) * (speed + 18);
                     projectile.vy = Math.sin(angle) * (speed + 18);
 
-                    // 加速特效
-                    for (let i = 0; i < 10; i++) {
+                    // 紫光冲击波
+                    if (!window.shockwaves) window.shockwaves = [];
+                    window.shockwaves.push({
+                        x: projectile.x, y: projectile.y,
+                        radius: 5, maxRadius: 120,
+                        color: 'rgba(156, 39, 176, 0.6)', lineWidth: 8
+                    });
+
+                    // 紫色念力爆发特效
+                    for (let i = 0; i < 25; i++) {
+                        const burstAngle = (i / 25) * Math.PI * 2;
                         particles.push({
                             x: projectile.x,
                             y: projectile.y,
-                            vx: -projectile.vx * 0.1 + (Math.random() - 0.5) * 3,
-                            vy: -projectile.vy * 0.1 + (Math.random() - 0.5) * 3,
-                            size: 4 + Math.random() * 4,
-                            color: '#00FFFF',
+                            vx: Math.cos(burstAngle) * (3 + Math.random() * 5),
+                            vy: Math.sin(burstAngle) * (3 + Math.random() * 5),
+                            size: 5 + Math.random() * 8,
+                            color: ['#9C27B0', '#E040FB', '#AA00FF', '#7B1FA2'][Math.floor(Math.random() * 4)],
+                            alpha: 1
+                        });
+                    }
+
+                    // 紫色尾迹粒子
+                    for (let i = 0; i < 15; i++) {
+                        particles.push({
+                            x: projectile.x,
+                            y: projectile.y,
+                            vx: -projectile.vx * 0.15 + (Math.random() - 0.5) * 4,
+                            vy: -projectile.vy * 0.15 + (Math.random() - 0.5) * 4,
+                            size: 6 + Math.random() * 6,
+                            color: '#E040FB',
                             alpha: 1
                         });
                     }
@@ -5972,6 +6260,43 @@
             update();
             render();
             requestAnimationFrame(gameLoop);
+        }
+
+        // ========================================
+        // 全屏功能
+        // ========================================
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const btn = document.getElementById('fullscreenBtn');
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+                btn.textContent = '✕';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                btn.textContent = '⛶';
+            }
+        }
+
+        // 监听全屏变化
+        document.addEventListener('fullscreenchange', updateFullscreenBtn);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
+
+        function updateFullscreenBtn() {
+            const btn = document.getElementById('fullscreenBtn');
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                btn.textContent = '✕';
+            } else {
+                btn.textContent = '⛶';
+            }
         }
 
         init();
