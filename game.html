@@ -956,23 +956,85 @@
         let lastUnusedCount = 0; // 上次未使用道具数量
 
         // ========================================
-        // 高级音效系统 (iOS 兼容)
+        // 高级音效系统 (iOS 兼容 - 双引擎)
         // ========================================
         let audioCtx = null;
         let soundEnabled = true;
         let masterGain = null;
         let audioInitialized = false;
+        let useHTMLAudio = false; // iOS 备选方案
+
+        // iOS 检测
+        const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        // HTML5 Audio 池（iOS 备选）
+        const audioPool = [];
+        const AUDIO_POOL_SIZE = 10;
+
+        function initAudioPool() {
+            for (let i = 0; i < AUDIO_POOL_SIZE; i++) {
+                const audio = new Audio();
+                audio.volume = 0.5;
+                audioPool.push(audio);
+            }
+            console.log('HTML5 Audio pool created');
+        }
+
+        // 获取可用的 Audio 元素
+        function getAvailableAudio() {
+            for (let audio of audioPool) {
+                if (audio.paused || audio.ended) {
+                    return audio;
+                }
+            }
+            // 如果都在用，返回第一个
+            return audioPool[0];
+        }
+
+        // 生成简单的音效数据 URL
+        function generateToneDataURL(frequency, duration, type = 'sine') {
+            const sampleRate = 22050;
+            const samples = Math.floor(sampleRate * duration);
+            const buffer = new Float32Array(samples);
+
+            for (let i = 0; i < samples; i++) {
+                const t = i / sampleRate;
+                let value = 0;
+                switch (type) {
+                    case 'sine':
+                        value = Math.sin(2 * Math.PI * frequency * t);
+                        break;
+                    case 'square':
+                        value = Math.sin(2 * Math.PI * frequency * t) > 0 ? 1 : -1;
+                        break;
+                    case 'sawtooth':
+                        value = 2 * (t * frequency - Math.floor(t * frequency + 0.5));
+                        break;
+                }
+                // 淡出
+                const fadeOut = 1 - (i / samples);
+                buffer[i] = value * fadeOut * 0.3;
+            }
+
+            return buffer;
+        }
 
         function initAudio() {
+            // 先尝试初始化 HTML5 Audio 池
+            if (audioPool.length === 0) {
+                initAudioPool();
+            }
+
             if (!audioCtx) {
                 try {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     masterGain = audioCtx.createGain();
                     masterGain.connect(audioCtx.destination);
                     masterGain.gain.value = 0.5;
-                    console.log('AudioContext created');
+                    console.log('AudioContext created, state:', audioCtx.state);
                 } catch (e) {
                     console.error('Failed to create AudioContext:', e);
+                    useHTMLAudio = true;
                     return;
                 }
             }
@@ -980,18 +1042,31 @@
             // iOS 需要在用户交互后恢复音频上下文
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume().then(() => {
-                    console.log('AudioContext resumed successfully');
+                    console.log('AudioContext resumed successfully, state:', audioCtx.state);
                     audioInitialized = true;
                 }).catch(e => {
                     console.error('Failed to resume AudioContext:', e);
+                    useHTMLAudio = true;
                 });
             } else {
                 audioInitialized = true;
+                console.log('AudioContext already running');
             }
         }
 
         // iOS 音频解锁 - 播放一个静音音频来解锁
         function unlockIOSAudio() {
+            // 先解锁 HTML5 Audio
+            if (audioPool.length > 0) {
+                const audio = audioPool[0];
+                audio.play().then(() => {
+                    audio.pause();
+                    console.log('HTML5 Audio unlocked');
+                }).catch(e => {
+                    console.log('HTML5 Audio unlock failed:', e);
+                });
+            }
+
             try {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1025,20 +1100,71 @@
 
         // 播放测试音效确认音频工作
         function playTestSound() {
-            if (!audioCtx || !soundEnabled) return;
+            if (!soundEnabled) return;
+
+            // 确保 AudioContext 存在且运行
+            if (!audioCtx) {
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    masterGain = audioCtx.createGain();
+                    masterGain.connect(audioCtx.destination);
+                    masterGain.gain.value = 0.5;
+                } catch (e) {
+                    console.error('Cannot create AudioContext:', e);
+                    return;
+                }
+            }
+
+            // 恢复暂停的上下文
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => {
+                    playBeep();
+                }).catch(e => console.error('Resume failed:', e));
+            } else {
+                playBeep();
+            }
+        }
+
+        // 简单的哔声
+        function playBeep() {
+            if (!audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 880;
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.frequency.value = 440;
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
                 osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + 0.1);
-                console.log('Test sound played');
+                osc.stop(audioCtx.currentTime + 0.15);
+                console.log('Beep played, context state:', audioCtx.state);
+                audioInitialized = true;
             } catch (e) {
-                console.error('Test sound failed:', e);
+                console.error('Beep failed:', e);
+            }
+        }
+
+        // 简化版音效 - 直接用 oscillator（更兼容 iOS）
+        function playSimpleSound(freq, duration, type) {
+            if (!soundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type || 'sine';
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.error('Simple sound failed:', e);
             }
         }
 
@@ -1069,6 +1195,17 @@
             if (!audioCtx) {
                 initAudio();
             }
+
+            // 检查是否需要使用 HTML5 Audio 备选方案
+            if (!audioCtx || (audioCtx.state === 'suspended' && isIOSDevice)) {
+                // 尝试恢复
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(e => console.log('Resume failed'));
+                }
+                // iOS 上如果 Web Audio 不工作，记录但不阻塞
+                console.log('Audio state:', audioCtx ? audioCtx.state : 'no context');
+            }
+
             if (!audioCtx) return;
 
             // 确保音频上下文是运行状态
@@ -1112,56 +1249,45 @@
 
         // 狗叫声
         function playBarkSound() {
-            createSound({
-                frequencies: [400, 550, 380],
-                durations: [0.12, 0.15, 0.18],
-                types: ['sawtooth', 'sawtooth', 'sawtooth'],
-                volumes: [0.35, 0.4, 0.3],
-                delays: [0, 100, 220],
-                freqSlide: [350, 450, 280],
-                filterFreq: 2000
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(400, 0.12, 'sawtooth');
+            setTimeout(() => playSimpleSound(550, 0.15, 'sawtooth'), 100);
+            setTimeout(() => playSimpleSound(380, 0.18, 'sawtooth'), 220);
         }
 
         // 猫叫声
         function playMeowSound() {
-            createSound({
-                frequencies: [800, 600, 400],
-                durations: [0.15, 0.2, 0.25],
-                types: ['sine', 'sine', 'sine'],
-                volumes: [0.3, 0.35, 0.25],
-                delays: [0, 80, 180],
-                freqSlide: [600, 450, 300],
-                filterFreq: 4000
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(800, 0.15, 'sine');
+            setTimeout(() => playSimpleSound(600, 0.2, 'sine'), 80);
+            setTimeout(() => playSimpleSound(400, 0.25, 'sine'), 180);
         }
 
         // 机器人声
         function playRobotSound() {
-            createSound({
-                frequencies: [200, 300, 150, 250],
-                durations: [0.08, 0.08, 0.1, 0.1],
-                types: ['square', 'square', 'square', 'sawtooth'],
-                volumes: [0.25, 0.25, 0.2, 0.2],
-                delays: [0, 70, 140, 200],
-                filterFreq: 1500
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(200, 0.08, 'square');
+            setTimeout(() => playSimpleSound(300, 0.08, 'square'), 70);
+            setTimeout(() => playSimpleSound(150, 0.1, 'square'), 140);
+            setTimeout(() => playSimpleSound(250, 0.1, 'sawtooth'), 200);
         }
 
         // 弹弓发射
         function playLaunchSound(type) {
             if (!soundEnabled) return;
-            initAudio();
 
-            // 弹弓弹射声
-            createSound({
-                frequencies: [150, 200, 100],
-                durations: [0.1, 0.08, 0.12],
-                types: ['triangle', 'triangle', 'sine'],
-                volumes: [0.4, 0.3, 0.25],
-                delays: [0, 30, 60],
-                filterFreq: 800
-            });
+            // 确保音频上下文存在并运行
+            if (!audioCtx) {
+                initAudio();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            // 使用简化版音效（更兼容 iOS）
+            playSimpleSound(150, 0.1, 'triangle');
+            setTimeout(() => playSimpleSound(200, 0.08, 'triangle'), 30);
+            setTimeout(() => playSimpleSound(100, 0.12, 'sine'), 60);
 
             setTimeout(() => {
                 switch(type) {
@@ -1175,53 +1301,35 @@
 
         // 水声
         function playWaterSound() {
-            createSound({
-                frequencies: [600, 800, 500, 700],
-                durations: [0.06, 0.05, 0.07, 0.05],
-                types: ['sine', 'sine', 'sine', 'sine'],
-                volumes: [0.2, 0.15, 0.18, 0.12],
-                delays: [0, 50, 100, 150],
-                filterFreq: 5000
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(600, 0.06, 'sine');
+            setTimeout(() => playSimpleSound(800, 0.05, 'sine'), 50);
+            setTimeout(() => playSimpleSound(500, 0.07, 'sine'), 100);
         }
 
         // 木头破碎
         function playWoodBreak() {
-            createSound({
-                frequencies: [150, 100, 80, 120],
-                durations: [0.15, 0.12, 0.18, 0.1],
-                types: ['sawtooth', 'triangle', 'sawtooth', 'triangle'],
-                volumes: [0.35, 0.3, 0.25, 0.2],
-                delays: [0, 40, 80, 120],
-                filterFreq: 1200
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(150, 0.15, 'sawtooth');
+            setTimeout(() => playSimpleSound(100, 0.12, 'triangle'), 40);
+            setTimeout(() => playSimpleSound(80, 0.18, 'sawtooth'), 80);
         }
 
         // 石头破碎
         function playStoneBreak() {
-            createSound({
-                frequencies: [80, 60, 100, 50],
-                durations: [0.2, 0.25, 0.15, 0.3],
-                types: ['square', 'sawtooth', 'square', 'triangle'],
-                volumes: [0.4, 0.35, 0.3, 0.25],
-                delays: [0, 50, 100, 150],
-                filterFreq: 600
-            });
+            // 简化版 - 更兼容 iOS
+            playSimpleSound(80, 0.2, 'square');
+            setTimeout(() => playSimpleSound(60, 0.25, 'sawtooth'), 50);
+            setTimeout(() => playSimpleSound(100, 0.15, 'square'), 100);
         }
 
         // 玻璃破碎
         function playGlassBreak() {
-            for (let i = 0; i < 6; i++) {
+            // 简化版 - 更兼容 iOS
+            for (let i = 0; i < 4; i++) {
                 setTimeout(() => {
-                    createSound({
-                        frequencies: [2000 + Math.random() * 3000],
-                        durations: [0.04 + Math.random() * 0.04],
-                        types: ['sine'],
-                        volumes: [0.12 + Math.random() * 0.08],
-                        delays: [0],
-                        filterFreq: 8000
-                    });
-                }, i * 25);
+                    playSimpleSound(2000 + Math.random() * 2000, 0.05, 'sine');
+                }, i * 30);
             }
         }
 
@@ -1601,8 +1709,25 @@
             soundEnabled = !soundEnabled;
             document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
             if (soundEnabled) {
-                initAudio();
-                playClickSound();
+                // 用户点击开启音效 - 这是一个用户交互，可以初始化音频
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        masterGain = audioCtx.createGain();
+                        masterGain.connect(audioCtx.destination);
+                        masterGain.gain.value = 0.5;
+                    } catch (e) {
+                        console.error('Failed to create audio context:', e);
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                        console.log('Audio enabled and resumed');
+                        playBeep();
+                    });
+                } else {
+                    playBeep();
+                }
             }
         }
 
@@ -6620,28 +6745,53 @@
             if (gameStarted) return;
             gameStarted = true;
 
+            console.log('Starting game...');
+
             // iOS 关键：在用户点击事件中直接创建和恢复 AudioContext
             try {
+                // 创建 AudioContext
                 if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                    console.log('AudioContext created, initial state:', audioCtx.state);
+                }
+
+                // 创建 masterGain
+                if (!masterGain) {
                     masterGain = audioCtx.createGain();
                     masterGain.connect(audioCtx.destination);
                     masterGain.gain.value = 0.5;
                 }
-                // 立即恢复
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
+
+                // 关键：立即恢复（必须在用户交互事件中）
+                const resumePromise = audioCtx.resume();
+                resumePromise.then(() => {
+                    console.log('AudioContext resumed, state:', audioCtx.state);
+                    audioInitialized = true;
+                    // 播放一个欢迎音效确认音频工作
+                    playBeep();
+                }).catch(e => {
+                    console.error('Resume failed:', e);
+                });
+
+                // 同时播放静音缓冲（双保险）
+                try {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                } catch (e) {
+                    console.log('Silent buffer failed:', e);
                 }
-                // 播放静音缓冲解锁
-                const buffer = audioCtx.createBuffer(1, 1, 22050);
-                const source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0);
-                audioInitialized = true;
-                console.log('Audio initialized on start click, state:', audioCtx.state);
+
             } catch (e) {
                 console.error('Audio init error:', e);
+            }
+
+            // 初始化 HTML5 Audio 池作为备选
+            if (audioPool.length === 0) {
+                initAudioPool();
             }
 
             // 隐藏启动画面
@@ -6660,10 +6810,15 @@
 
             // 在 canvas 上添加触摸监听来解锁音频
             const gameCanvas = document.getElementById('gameCanvas');
-            gameCanvas.addEventListener('touchstart', unlockIOSAudio, { passive: true });
-            gameCanvas.addEventListener('mousedown', unlockIOSAudio, { passive: true });
+            gameCanvas.addEventListener('touchstart', function() {
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                        console.log('Canvas touch resumed audio');
+                    });
+                }
+            }, { passive: true });
 
-            console.log('Game started');
+            console.log('Game initialization complete');
         }
 
         // 检测是否从主屏幕启动 (PWA模式)，如果是则自动开始
