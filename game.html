@@ -5521,9 +5521,9 @@
         function updateProjectile(p) {
             if (!p.active) return;
 
-            // 物理模拟
+            // 物理模拟（重力对所有角色相同，质量只影响碰撞冲击力）
             p.vx *= AIR_RESISTANCE;
-            p.vy += GRAVITY * p.mass;
+            p.vy += GRAVITY;  // 重力对所有物体相同
             p.vy *= AIR_RESISTANCE;
             p.x += p.vx;
             p.y += p.vy;
@@ -6858,12 +6858,25 @@
                 slot.title = b.name + ' - ' + (buddyTypes[b.type]?.desc || '');
 
                 // 点击选择角色（自选功能）
-                if (!b.used && gameState === 'ready') {
+                if (!b.used) {
                     slot.style.cursor = 'pointer';
-                    slot.addEventListener('click', () => selectBuddy(i));
+                    let handled = false;
+                    slot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!handled && gameState === 'ready') {
+                            handled = true;
+                            selectBuddy(i);
+                            setTimeout(() => handled = false, 300);
+                        }
+                    });
                     slot.addEventListener('touchend', (e) => {
                         e.preventDefault();
-                        selectBuddy(i);
+                        e.stopPropagation();
+                        if (!handled && gameState === 'ready') {
+                            handled = true;
+                            selectBuddy(i);
+                            setTimeout(() => handled = false, 300);
+                        }
                     });
                 }
 
@@ -6878,6 +6891,7 @@
                 selectedBuddyIndex = index;
                 playSimpleSound(500, 0.1, 'sine'); // 选择音效
                 renderBuddiesPanel();
+                placeCurrentBuddy(); // 更新弹弓上的角色
             }
         }
 
