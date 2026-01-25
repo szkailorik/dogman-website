@@ -5599,6 +5599,52 @@
                 }
             }
 
+            // Sarah 回旋镖效果 - 持续追踪返回弹弓位置
+            if (p.isReturning && p.type === 'sarah') {
+                // 持续调整方向，飞向弹弓
+                const dx = SLINGSHOT_X - p.x;
+                const dy = SLINGSHOT_Y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // 如果接近弹弓，停止
+                if (dist < 50) {
+                    p.active = false;
+                    p.isReturning = false;
+                } else {
+                    // 持续调整速度方向
+                    const targetSpeed = 16;
+                    const adjustRate = 0.15; // 调整率，让飞行有弧度
+                    p.vx += (dx / dist) * adjustRate * targetSpeed;
+                    p.vy += (dy / dist) * adjustRate * targetSpeed;
+
+                    // 限制最大速度
+                    const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                    if (currentSpeed > targetSpeed) {
+                        p.vx = (p.vx / currentSpeed) * targetSpeed;
+                        p.vy = (p.vy / currentSpeed) * targetSpeed;
+                    }
+
+                    // 减少重力影响
+                    p.vy -= GRAVITY * 0.7;
+                }
+
+                // 快速旋转
+                p.rotation += 0.4;
+
+                // 粉色尾迹粒子
+                if (frameCount % 2 === 0) {
+                    particles.push({
+                        x: p.x + (Math.random() - 0.5) * 15,
+                        y: p.y + (Math.random() - 0.5) * 15,
+                        vx: -p.vx * 0.1 + (Math.random() - 0.5) * 2,
+                        vy: -p.vy * 0.1 + (Math.random() - 0.5) * 2,
+                        size: 6 + Math.random() * 6,
+                        color: ['#E91E63', '#FF69B4', '#FFB6C1'][Math.floor(Math.random() * 3)],
+                        alpha: 0.9
+                    });
+                }
+            }
+
             // 边界
             if (p.x < -60 || p.x > canvas.width + 60) {
                 p.active = false;
@@ -6692,7 +6738,7 @@
                         });
                     }
                 } else if (projectile.special === 'boomerang') {
-                    // Sarah 回旋镖技能 - 返回并再次攻击
+                    // Sarah 回旋镖技能 - 真正的回旋镖效果，飞回弹弓位置
                     projectile.specialUsed = true;
                     projectile.boomerangActive = true;
 
@@ -6701,46 +6747,43 @@
                     setTimeout(() => playSimpleSound(800, 0.15, 'sine'), 50);
                     setTimeout(() => playSimpleSound(1000, 0.1, 'sine'), 100);
 
-                    // 反转速度并加速（更强的回旋效果）
-                    const currentSpeed = Math.sqrt(projectile.vx ** 2 + projectile.vy ** 2);
-                    projectile.vx = -projectile.vx * 1.5;
-                    projectile.vy = -Math.abs(projectile.vy) * 0.8 - 8;
+                    // 计算飞回弹弓的方向和速度
+                    const dx = SLINGSHOT_X - projectile.x;
+                    const dy = SLINGSHOT_Y - projectile.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const returnSpeed = 18; // 回旋速度
 
-                    // 增加旋转速度
-                    projectile.rotationSpeed = 0.5;
+                    // 设置飞回弹弓的速度（带弧线）
+                    projectile.vx = (dx / dist) * returnSpeed;
+                    projectile.vy = (dy / dist) * returnSpeed - 5; // 稍微向上的弧线
+
+                    // 标记回旋状态，用于物理更新
+                    projectile.isReturning = true;
+                    projectile.returnTargetX = SLINGSHOT_X;
+                    projectile.returnTargetY = SLINGSHOT_Y;
+
+                    // 快速旋转
+                    projectile.rotationSpeed = 0.8;
 
                     // 冲击波效果
                     if (!window.shockwaves) window.shockwaves = [];
                     window.shockwaves.push({
                         x: projectile.x, y: projectile.y,
-                        radius: 5, maxRadius: 100,
-                        color: 'rgba(233, 30, 99, 0.6)', lineWidth: 6
+                        radius: 5, maxRadius: 120,
+                        color: 'rgba(233, 30, 99, 0.7)', lineWidth: 8
                     });
 
-                    // 回旋粒子特效（更多更亮）
-                    for (let i = 0; i < 30; i++) {
-                        const angle = (i / 30) * Math.PI * 2;
-                        const speed = 6 + Math.random() * 4;
+                    // 回旋粒子特效
+                    for (let i = 0; i < 25; i++) {
+                        const angle = (i / 25) * Math.PI * 2;
+                        const speed = 5 + Math.random() * 3;
                         particles.push({
                             x: projectile.x,
                             y: projectile.y,
                             vx: Math.cos(angle) * speed,
                             vy: Math.sin(angle) * speed,
-                            size: 5 + Math.random() * 6,
+                            size: 5 + Math.random() * 5,
                             color: i % 2 === 0 ? '#E91E63' : '#FF69B4',
-                            alpha: 1
-                        });
-                    }
-
-                    // 尾迹粒子
-                    for (let i = 0; i < 15; i++) {
-                        particles.push({
-                            x: projectile.x + (Math.random() - 0.5) * 20,
-                            y: projectile.y + (Math.random() - 0.5) * 20,
-                            vx: projectile.vx * 0.3 + (Math.random() - 0.5) * 3,
-                            vy: projectile.vy * 0.3 + (Math.random() - 0.5) * 3,
-                            size: 4 + Math.random() * 4,
-                            color: '#FFB6C1',
                             alpha: 1
                         });
                     }
