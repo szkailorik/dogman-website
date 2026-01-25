@@ -784,10 +784,11 @@
         <div style="font-size: 3rem; margin: 20px 0;">🎮</div>
         <p style="font-size: 1.1rem; color: #ccc;">SUPA BUDDIES SLINGSHOT</p>
         <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">超级伙伴弹弓大战</p>
-        <button class="start-btn" id="startGameBtn" onclick="startGame()">
+        <button class="start-btn" id="startGameBtn">
             点击开始游戏
         </button>
         <p class="sound-notice">🔊 点击开始以启用游戏音效</p>
+        <p id="audioDebug" style="font-size:0.7rem;color:#666;margin-top:10px;"></p>
     </div>
 
     <nav class="game-nav">
@@ -6747,48 +6748,6 @@
 
             console.log('Starting game...');
 
-            // iOS 关键：在用户点击事件中直接创建和恢复 AudioContext
-            try {
-                // 创建 AudioContext
-                if (!audioCtx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    audioCtx = new AudioContext();
-                    console.log('AudioContext created, initial state:', audioCtx.state);
-                }
-
-                // 创建 masterGain
-                if (!masterGain) {
-                    masterGain = audioCtx.createGain();
-                    masterGain.connect(audioCtx.destination);
-                    masterGain.gain.value = 0.5;
-                }
-
-                // 关键：立即恢复（必须在用户交互事件中）
-                const resumePromise = audioCtx.resume();
-                resumePromise.then(() => {
-                    console.log('AudioContext resumed, state:', audioCtx.state);
-                    audioInitialized = true;
-                    // 播放一个欢迎音效确认音频工作
-                    playBeep();
-                }).catch(e => {
-                    console.error('Resume failed:', e);
-                });
-
-                // 同时播放静音缓冲（双保险）
-                try {
-                    const buffer = audioCtx.createBuffer(1, 1, 22050);
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                } catch (e) {
-                    console.log('Silent buffer failed:', e);
-                }
-
-            } catch (e) {
-                console.error('Audio init error:', e);
-            }
-
             // 初始化 HTML5 Audio 池作为备选
             if (audioPool.length === 0) {
                 initAudioPool();
@@ -6805,15 +6764,13 @@
             // 初始化游戏
             init();
 
-            // 设置额外的音频解锁监听
-            setupIOSAudioUnlock();
-
             // 在 canvas 上添加触摸监听来解锁音频
             const gameCanvas = document.getElementById('gameCanvas');
             gameCanvas.addEventListener('touchstart', function() {
                 if (audioCtx && audioCtx.state === 'suspended') {
                     audioCtx.resume().then(() => {
                         console.log('Canvas touch resumed audio');
+                        playTestTone();
                     });
                 }
             }, { passive: true });
@@ -6825,6 +6782,77 @@
         if (isStandalone) {
             document.getElementById('startScreen').style.display = 'none';
             startGame();
+        }
+
+        // iOS 关键：必须在 touchend/click 事件监听器中初始化音频
+        document.getElementById('startGameBtn').addEventListener('touchend', function(e) {
+            e.preventDefault();
+            initAudioOnUserGesture();
+            startGame();
+        }, { passive: false });
+
+        document.getElementById('startGameBtn').addEventListener('click', function(e) {
+            initAudioOnUserGesture();
+            startGame();
+        });
+
+        // 在用户手势中初始化音频（iOS 关键）
+        function initAudioOnUserGesture() {
+            const debug = document.getElementById('audioDebug');
+            try {
+                // 创建 AudioContext
+                if (!audioCtx) {
+                    const AC = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AC();
+                    if (debug) debug.textContent = 'Created: ' + audioCtx.state;
+                }
+
+                // 创建 gain 节点
+                if (!masterGain && audioCtx) {
+                    masterGain = audioCtx.createGain();
+                    masterGain.connect(audioCtx.destination);
+                    masterGain.gain.value = 0.5;
+                }
+
+                // 恢复音频上下文
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                        if (debug) debug.textContent = 'Resumed: ' + audioCtx.state;
+                        audioInitialized = true;
+                        // 立即播放测试音
+                        playTestTone();
+                    }).catch(err => {
+                        if (debug) debug.textContent = 'Resume error: ' + err;
+                    });
+                } else {
+                    if (debug) debug.textContent = 'State: ' + audioCtx.state;
+                    audioInitialized = true;
+                    playTestTone();
+                }
+            } catch (err) {
+                if (debug) debug.textContent = 'Error: ' + err;
+            }
+        }
+
+        // 简单测试音
+        function playTestTone() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 660;
+                gain.gain.value = 0.3;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.2);
+                console.log('Test tone played');
+            } catch (e) {
+                console.error('Test tone error:', e);
+            }
         }
     </script>
 </body>
