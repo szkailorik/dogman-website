@@ -5601,19 +5601,22 @@
 
             // Sarah 回旋镖效果 - 持续追踪返回弹弓位置
             if (p.isReturning && p.type === 'sarah') {
+                // 增加回旋计时器
+                p.boomerangTimer = (p.boomerangTimer || 0) + 1;
+
                 // 持续调整方向，飞向弹弓
                 const dx = SLINGSHOT_X - p.x;
                 const dy = SLINGSHOT_Y - p.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                // 如果接近弹弓，停止
-                if (dist < 50) {
+                // 只有飞行了足够时间后接近弹弓才停止（防止刚触发就消失）
+                if (dist < 40 && p.boomerangTimer > 30) {
                     p.active = false;
                     p.isReturning = false;
                 } else {
                     // 持续调整速度方向
-                    const targetSpeed = 16;
-                    const adjustRate = 0.15; // 调整率，让飞行有弧度
+                    const targetSpeed = 14;
+                    const adjustRate = 0.12;
                     p.vx += (dx / dist) * adjustRate * targetSpeed;
                     p.vy += (dy / dist) * adjustRate * targetSpeed;
 
@@ -5624,12 +5627,12 @@
                         p.vy = (p.vy / currentSpeed) * targetSpeed;
                     }
 
-                    // 减少重力影响
-                    p.vy -= GRAVITY * 0.7;
+                    // 抵消大部分重力，让回旋更明显
+                    p.vy -= GRAVITY * 0.85;
                 }
 
                 // 快速旋转
-                p.rotation += 0.4;
+                p.rotation += 0.5;
 
                 // 粉色尾迹粒子
                 if (frameCount % 2 === 0) {
@@ -6739,8 +6742,20 @@
                     }
                 } else if (projectile.special === 'boomerang') {
                     // Sarah 回旋镖技能 - 真正的回旋镖效果，飞回弹弓位置
+                    // 必须飞出一定距离才能触发回旋镖
+                    const distFromSlingshot = Math.sqrt(
+                        (projectile.x - SLINGSHOT_X) ** 2 +
+                        (projectile.y - SLINGSHOT_Y) ** 2
+                    );
+
+                    if (distFromSlingshot < 100) {
+                        // 还没飞够远，不触发技能
+                        return;
+                    }
+
                     projectile.specialUsed = true;
                     projectile.boomerangActive = true;
+                    projectile.boomerangTimer = 0; // 初始化回旋计时器
 
                     // 音效
                     playSimpleSound(600, 0.2, 'sine');
