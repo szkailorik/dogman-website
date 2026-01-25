@@ -1410,3 +1410,66 @@ body {
         box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
     }
 }
+
+/* ========================================
+   移动端游戏浮动按钮
+   ======================================== */
+.mobile-game-fab {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 999;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    text-decoration: none;
+    font-size: 1.8rem;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
+    animation: fab-pulse 2s infinite;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.mobile-game-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(231, 76, 60, 0.6);
+}
+
+.mobile-game-fab-text {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--dark-color);
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-weight: bold;
+}
+
+.mobile-game-fab-text.hidden {
+    display: none !important;
+}
+
+@keyframes fab-pulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5), 0 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5), 0 0 0 15px rgba(231, 76, 60, 0);
+    }
+}
+
+/* 移动端显示游戏浮动按钮 */
+@media (max-width: 992px) {
+    .mobile-game-fab {
+        display: flex;
+    }
+}

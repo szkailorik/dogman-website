@@ -634,9 +634,110 @@
                 display: flex;
             }
         }
+
+        /* iOS 伪全屏模式 */
+        body.ios-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        body.ios-fullscreen .game-nav {
+            display: none;
+        }
+
+        body.ios-fullscreen .game-container {
+            padding-top: 10px;
+            height: 100vh;
+            height: 100dvh; /* 动态视口高度，适配 iOS Safari */
+        }
+
+        body.ios-fullscreen .game-title,
+        body.ios-fullscreen .game-subtitle {
+            display: none;
+        }
+
+        body.ios-fullscreen .game-header {
+            padding: 5px 10px;
+            margin-bottom: 5px;
+        }
+
+        body.ios-fullscreen .instructions {
+            display: none;
+        }
+
+        body.ios-fullscreen .fullscreen-btn {
+            bottom: 60px;
+            right: 10px;
+        }
+
+        /* iOS 启动画面样式 */
+        .ios-start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ios-start-screen h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.5rem;
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .ios-start-screen .start-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            animation: start-pulse 1.5s infinite;
+            margin-top: 30px;
+        }
+
+        @keyframes start-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
+        }
+
+        .ios-start-screen .sound-notice {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
+    <!-- iOS/移动端启动画面 - 用于解锁音频 -->
+    <div class="ios-start-screen" id="startScreen">
+        <h1>🐕 DOG MAN 🐕</h1>
+        <div style="font-size: 3rem; margin: 20px 0;">🎮</div>
+        <p style="font-size: 1.1rem; color: #ccc;">SUPA BUDDIES SLINGSHOT</p>
+        <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">超级伙伴弹弓大战</p>
+        <button class="start-btn" id="startGameBtn" onclick="startGame()">
+            点击开始游戏
+        </button>
+        <p class="sound-notice">🔊 点击开始以启用游戏音效</p>
+    </div>
+
     <nav class="game-nav">
         <a href="index.html" class="nav-brand">
             <img src="https://pilkey.com/userFiles/uploads/dog-man/dog-man/Dog_Man_1.jpeg" alt="Dog Man">
@@ -803,22 +904,78 @@
         let lastUnusedCount = 0; // 上次未使用道具数量
 
         // ========================================
-        // 高级音效系统
+        // 高级音效系统 (iOS 兼容)
         // ========================================
         let audioCtx = null;
         let soundEnabled = true;
         let masterGain = null;
+        let audioInitialized = false;
 
         function initAudio() {
             if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                masterGain = audioCtx.createGain();
-                masterGain.connect(audioCtx.destination);
-                masterGain.gain.value = 0.5;
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    masterGain = audioCtx.createGain();
+                    masterGain.connect(audioCtx.destination);
+                    masterGain.gain.value = 0.5;
+                    console.log('AudioContext created');
+                } catch (e) {
+                    console.error('Failed to create AudioContext:', e);
+                    return;
+                }
             }
+
+            // iOS 需要在用户交互后恢复音频上下文
             if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+                audioCtx.resume().then(() => {
+                    console.log('AudioContext resumed successfully');
+                    audioInitialized = true;
+                }).catch(e => {
+                    console.error('Failed to resume AudioContext:', e);
+                });
+            } else {
+                audioInitialized = true;
             }
+        }
+
+        // iOS 音频解锁 - 播放一个静音音频来解锁
+        function unlockIOSAudio() {
+            if (!audioCtx) {
+                initAudio();
+            }
+
+            if (audioCtx && audioCtx.state === 'suspended') {
+                // 创建一个短暂的静音音频来解锁
+                const buffer = audioCtx.createBuffer(1, 1, 22050);
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+
+                audioCtx.resume().then(() => {
+                    console.log('iOS audio unlocked');
+                    audioInitialized = true;
+                });
+            }
+        }
+
+        // 在所有用户交互时尝试解锁音频
+        function setupIOSAudioUnlock() {
+            const unlockEvents = ['touchstart', 'touchend', 'mousedown', 'click'];
+
+            function unlockHandler() {
+                unlockIOSAudio();
+                // 解锁后移除事件监听
+                if (audioInitialized) {
+                    unlockEvents.forEach(event => {
+                        document.removeEventListener(event, unlockHandler);
+                    });
+                }
+            }
+
+            unlockEvents.forEach(event => {
+                document.addEventListener(event, unlockHandler, { passive: true });
+            });
         }
 
         // 创建复杂音效
@@ -6263,11 +6420,24 @@
         }
 
         // ========================================
-        // 全屏功能
+        // iOS 检测
+        // ========================================
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.navigator.standalone === true;
+        let iosFullscreenMode = false;
+
+        // ========================================
+        // 全屏功能 (支持 iOS)
         // ========================================
         function toggleFullscreen() {
             const elem = document.documentElement;
             const btn = document.getElementById('fullscreenBtn');
+
+            // iOS 不支持标准 Fullscreen API，使用替代方案
+            if (isIOS) {
+                toggleIOSFullscreen();
+                return;
+            }
 
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 if (elem.requestFullscreen) {
@@ -6286,6 +6456,54 @@
             }
         }
 
+        // iOS 伪全屏模式
+        function toggleIOSFullscreen() {
+            const btn = document.getElementById('fullscreenBtn');
+            iosFullscreenMode = !iosFullscreenMode;
+
+            if (iosFullscreenMode) {
+                document.body.classList.add('ios-fullscreen');
+                btn.textContent = '✕';
+                // 滚动到顶部隐藏地址栏
+                window.scrollTo(0, 1);
+                // 显示退出提示
+                showIOSFullscreenTip();
+            } else {
+                document.body.classList.remove('ios-fullscreen');
+                btn.textContent = '⛶';
+            }
+        }
+
+        // 显示 iOS 全屏提示
+        function showIOSFullscreenTip() {
+            // 如果不是从主屏幕启动，提示用户
+            if (!isStandalone && isIOS) {
+                const existingTip = document.getElementById('iosTip');
+                if (existingTip) existingTip.remove();
+
+                const tip = document.createElement('div');
+                tip.id = 'iosTip';
+                tip.innerHTML = `
+                    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                        background:rgba(0,0,0,0.9);color:white;padding:25px;border-radius:15px;
+                        z-index:9999;text-align:center;max-width:300px;border:2px solid #FFD700;">
+                        <div style="font-size:2rem;margin-bottom:15px;">📱</div>
+                        <div style="font-size:1rem;margin-bottom:15px;font-weight:bold;color:#FFD700;">获得最佳全屏体验</div>
+                        <div style="font-size:0.85rem;line-height:1.6;margin-bottom:15px;">
+                            横屏游玩效果更好！<br><br>
+                            点击 Safari 底部 <span style="font-size:1.2rem;">⬆️</span> 按钮<br>
+                            选择 "添加到主屏幕"<br>
+                            即可获得真正的全屏体验！
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()"
+                            style="background:#FFD700;color:#000;border:none;padding:10px 25px;
+                            border-radius:20px;font-weight:bold;cursor:pointer;">知道了</button>
+                    </div>
+                `;
+                document.body.appendChild(tip);
+            }
+        }
+
         // 监听全屏变化
         document.addEventListener('fullscreenchange', updateFullscreenBtn);
         document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
@@ -6299,7 +6517,51 @@
             }
         }
 
-        init();
+        // ========================================
+        // 游戏启动函数 (支持 iOS 音频)
+        // ========================================
+        let gameStarted = false;
+
+        function startGame() {
+            if (gameStarted) return;
+            gameStarted = true;
+
+            // 初始化并解锁音频 (iOS 关键步骤)
+            initAudio();
+            unlockIOSAudio();
+
+            // 隐藏启动画面
+            const startScreen = document.getElementById('startScreen');
+            startScreen.style.opacity = '0';
+            startScreen.style.transition = 'opacity 0.5s';
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+            }, 500);
+
+            // 初始化游戏
+            init();
+
+            // 设置 iOS 音频解锁监听
+            setupIOSAudioUnlock();
+
+            // 如果是 iOS 且横屏，提示全屏
+            if (isIOS && window.innerWidth > window.innerHeight) {
+                setTimeout(() => {
+                    const btn = document.getElementById('fullscreenBtn');
+                    if (btn) {
+                        btn.style.animation = 'fab-pulse 1s infinite';
+                    }
+                }, 1000);
+            }
+
+            console.log('Game started, audio initialized');
+        }
+
+        // 检测是否从主屏幕启动 (PWA模式)，如果是则自动开始
+        if (isStandalone) {
+            document.getElementById('startScreen').style.display = 'none';
+            startGame();
+        }
     </script>
 </body>
 </html>
