@@ -3792,9 +3792,31 @@
                 ctx.stroke();
                 ctx.globalAlpha = 1;
             }
+            // Sarah 回旋镖激活效果
+            if (buddy.boomerangActive && buddy.type === 'sarah') {
+                ctx.shadowColor = '#E91E63';
+                ctx.shadowBlur = 30 + Math.sin(frameCount * 0.25) * 10;
+
+                // 粉色旋转光环
+                const pulseSize = 1 + Math.sin(frameCount * 0.2) * 0.15;
+                ctx.strokeStyle = '#E91E63';
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.arc(0, 0, buddy.radius * 1.6 * pulseSize, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
             // 普通外发光效果
             else if (buddy.special && !buddy.specialUsed && buddy.active) {
-                ctx.shadowColor = buddy.type === 'lilpetey' ? '#FFD700' : buddy.type === 'flippy' ? '#9C27B0' : '#00FFFF';
+                const glowColors = {
+                    'lilpetey': '#FFD700',
+                    'flippy': '#9C27B0',
+                    'chief': '#2E86AB',
+                    'sarah': '#E91E63',
+                    '80hd': '#5DADE2'
+                };
+                ctx.shadowColor = glowColors[buddy.type] || '#00FFFF';
                 ctx.shadowBlur = 15 + Math.sin(frameCount * 0.15) * 5;
             }
 
@@ -3811,6 +3833,12 @@
                     break;
                 case 'flippy':
                     drawFlippy(buddy.radius);
+                    break;
+                case 'chief':
+                    drawChief(buddy.radius);
+                    break;
+                case 'sarah':
+                    drawSarah(buddy.radius);
                     break;
             }
 
