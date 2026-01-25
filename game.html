@@ -233,6 +233,17 @@
             filter: grayscale(1);
         }
 
+        .buddy-slot.selected:not(.used) {
+            border-color: #2ecc71;
+            background: linear-gradient(135deg, rgba(46,204,113,0.4), rgba(46,204,113,0.2));
+            box-shadow: 0 0 15px rgba(46,204,113,0.5);
+        }
+
+        .buddy-slot:not(.used):hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
         .game-controls {
             display: flex;
             gap: 12px;
@@ -864,12 +875,22 @@
                 <div class="buddy-card">
                     <canvas id="80hdIcon" width="50" height="50" style="width:50px;height:50px;"></canvas>
                     <div class="name">80-HD</div>
-                    <div class="skill">球形机器人 | 超重</div>
+                    <div class="skill">机器人 | 超级重击</div>
                 </div>
                 <div class="buddy-card">
                     <canvas id="flippyIcon" width="50" height="50" style="width:50px;height:50px;"></canvas>
                     <div class="name">Flippy</div>
-                    <div class="skill">念力鱼 | 加速</div>
+                    <div class="skill">念力鱼 | 加速冲刺</div>
+                </div>
+                <div class="buddy-card">
+                    <canvas id="chiefIcon" width="50" height="50" style="width:50px;height:50px;"></canvas>
+                    <div class="name">Chief</div>
+                    <div class="skill">警长 | 冲击波</div>
+                </div>
+                <div class="buddy-card">
+                    <canvas id="sarahIcon" width="50" height="50" style="width:50px;height:50px;"></canvas>
+                    <div class="name">Sarah</div>
+                    <div class="skill">记者 | 回旋镖</div>
                 </div>
             </div>
         </div>
@@ -1740,20 +1761,18 @@
         let currentScene = 'city';
 
         const levels = [
-            // 第1关 - 新手入门
+            // 第1关 - 新手入门（减少好运箱）
             {
                 scene: 'city',
-                buddies: ['dogman', 'dogman', 'dogman'],
+                buddies: ['dogman', 'dogman'],
                 villains: [{ type: 'petey', x: 850, y: GROUND_Y - 58 }],
                 blocks: [
                     { type: 'glass', x: 810, y: GROUND_Y - 25, w: 80, h: 25 },
-                    { type: 'greenbox', x: 750, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 920, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 835, y: GROUND_Y - 120, w: 35, h: 35, moveX: 30 }
+                    { type: 'glass', x: 820, y: GROUND_Y - 50, w: 60, h: 20 }
                 ],
-                stars: [1, 2, 3]
+                stars: [1, 2, 2]
             },
-            // 第2关 - 简单双敌
+            // 第2关 - 简单双敌（移除好运箱）
             {
                 scene: 'city',
                 buddies: ['dogman', 'dogman', 'lilpetey'],
@@ -1765,14 +1784,11 @@
                     { type: 'glass', x: 780, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'glass', x: 860, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'greenbox', x: 700, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 820, y: GROUND_Y - 130, w: 35, h: 35, moveY: 20 },
-                    { type: 'redbox', x: 500, y: GROUND_Y - 100, w: 35, h: 35, moveX: 40 }
+                    { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 80 }
                 ],
                 stars: [1, 2, 3]
             },
-            // 第3关 - 初遇石头
+            // 第3关 - 初遇石头（只保留1个好运箱）
             {
                 scene: 'policestation',
                 buddies: ['dogman', 'lilpetey', '80hd'],
@@ -1786,16 +1802,14 @@
                     { type: 'glass', x: 750, y: GROUND_Y - 135, w: 145, h: 20 },
                     { type: 'glass', x: 870, y: GROUND_Y - 25, w: 20, h: 60 },
                     { type: 'glass', x: 940, y: GROUND_Y - 25, w: 20, h: 60 },
-                    { type: 'greenbox', x: 680, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 1000, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 800, y: GROUND_Y - 180, w: 35, h: 35, moveX: 25 }
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 180, w: 35, h: 35 }
                 ],
                 stars: [1, 2, 3]
             },
-            // 第4关 - TNT初体验
+            // 第4关 - TNT初体验（减少箱子，添加Chief）
             {
                 scene: 'catjail',
-                buddies: ['dogman', 'dogman', 'flippy', 'lilpetey'],
+                buddies: ['dogman', 'chief', 'lilpetey'],
                 villains: [
                     { type: 'petey', x: 750, y: GROUND_Y - 58 },
                     { type: 'petey', x: 920, y: GROUND_Y - 55 }
@@ -1806,17 +1820,14 @@
                     { type: 'glass', x: 880, y: GROUND_Y - 25, w: 20, h: 80 },
                     { type: 'glass', x: 960, y: GROUND_Y - 25, w: 20, h: 80 },
                     { type: 'tnt', x: 750, y: GROUND_Y - 110 },
-                    { type: 'greenbox', x: 650, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 1020, y: GROUND_Y - 50, w: 35, h: 35, moveY: 30 },
-                    { type: 'greenbox', x: 835, y: GROUND_Y - 130, w: 35, h: 35, moveX: 50 },
-                    { type: 'redbox', x: 500, y: GROUND_Y - 120, w: 35, h: 35, moveX: 60 }
+                    { type: 'greenbox', x: 835, y: GROUND_Y - 130, w: 35, h: 35 }
                 ],
-                stars: [2, 3, 4]
+                stars: [1, 2, 3]
             },
-            // 第5关 - 双层结构
+            // 第5关 - 双层结构（平衡调整，添加Sarah）
             {
                 scene: 'secretlab',
-                buddies: ['80hd', 'dogman', 'dogman', 'lilpetey'],
+                buddies: ['80hd', 'sarah', 'dogman', 'lilpetey'],
                 villains: [
                     { type: 'petey', x: 680, y: GROUND_Y - 60 },
                     { type: 'petey', x: 820, y: GROUND_Y - 183 },
@@ -1831,17 +1842,14 @@
                     { type: 'wood', x: 920, y: GROUND_Y - 25, w: 25, h: 90 },
                     { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 90 },
                     { type: 'tnt', x: 680, y: GROUND_Y - 120 },
-                    { type: 'greenbox', x: 580, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 1060, y: GROUND_Y - 50, w: 35, h: 35, moveY: 25 },
-                    { type: 'greenbox', x: 820, y: GROUND_Y - 235, w: 35, h: 35 },
                     { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveX: 50 }
                 ],
                 stars: [2, 3, 4]
             },
-            // 第6关 - 三敌挑战
+            // 第6关 - 三敌挑战（使用新角色）
             {
                 scene: 'city',
-                buddies: ['dogman', 'flippy', 'flippy', '80hd'],
+                buddies: ['chief', 'flippy', 'sarah', '80hd'],
                 villains: [
                     { type: 'petey', x: 650, y: GROUND_Y - 55 },
                     { type: 'petey', x: 820, y: GROUND_Y - 55 },
@@ -1854,17 +1862,14 @@
                     { type: 'wood', x: 860, y: GROUND_Y - 25, w: 20, h: 70 },
                     { type: 'wood', x: 950, y: GROUND_Y - 25, w: 20, h: 70 },
                     { type: 'wood', x: 1030, y: GROUND_Y - 25, w: 20, h: 70 },
-                    { type: 'greenbox', x: 550, y: GROUND_Y - 80, w: 35, h: 35, moveY: 30 },
-                    { type: 'greenbox', x: 820, y: GROUND_Y - 120, w: 35, h: 35 },
-                    { type: 'greenbox', x: 1090, y: GROUND_Y - 80, w: 35, h: 35, moveY: 30 },
-                    { type: 'redbox', x: 480, y: GROUND_Y - 150, w: 35, h: 35, moveX: 40 }
+                    { type: 'greenbox', x: 820, y: GROUND_Y - 120, w: 35, h: 35 }
                 ],
                 stars: [2, 3, 4]
             },
-            // 第7关 - 高塔攻略
+            // 第7关 - 高塔攻略（减少箱子）
             {
                 scene: 'policestation',
-                buddies: ['lilpetey', 'lilpetey', '80hd', 'dogman'],
+                buddies: ['lilpetey', 'chief', '80hd', 'dogman'],
                 villains: [
                     { type: 'petey', x: 720, y: GROUND_Y - 220 },
                     { type: 'petey', x: 840, y: GROUND_Y - 220 },
@@ -1878,17 +1883,14 @@
                     { type: 'glass', x: 660, y: GROUND_Y - 220, w: 340, h: 20 },
                     { type: 'tnt', x: 720, y: GROUND_Y - 80 },
                     { type: 'tnt', x: 920, y: GROUND_Y - 80 },
-                    { type: 'greenbox', x: 600, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 1040, y: GROUND_Y - 50, w: 35, h: 35 },
-                    { type: 'greenbox', x: 820, y: GROUND_Y - 270, w: 35, h: 35, moveX: 40 },
                     { type: 'redbox', x: 500, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 }
                 ],
                 stars: [2, 3, 4]
             },
-            // 第8关 - 双层防御
+            // 第8关 - 双层防御（添加新角色）
             {
                 scene: 'catjail',
-                buddies: ['80hd', '80hd', 'flippy', 'dogman'],
+                buddies: ['80hd', 'sarah', 'flippy', 'chief'],
                 villains: [
                     { type: 'flatpetey', x: 780, y: GROUND_Y - 55 },
                     { type: 'petey', x: 900, y: GROUND_Y - 138 },
@@ -2570,12 +2572,17 @@
         // 伙伴类型 - 基于真实Dog Man角色设计
         // ========================================
         const buddyTypes = {
-            dogman: { name: 'Dog Man', radius: 26, mass: 1, color: '#D2691E', special: null },
-            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.6, color: '#FF8C00', special: 'split' },
-            '80hd': { name: '80-HD', radius: 28, mass: 2.2, color: '#5DADE2', special: null },
-            flippy: { name: 'Flippy', radius: 22, mass: 0.7, color: '#F4D03F', special: 'boost' }
+            dogman: { name: 'Dog Man', radius: 26, mass: 1, color: '#D2691E', special: null, desc: '标准攻击' },
+            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.6, color: '#FF8C00', special: 'split', desc: '分裂×3' },
+            '80hd': { name: '80-HD', radius: 28, mass: 2.2, color: '#5DADE2', special: 'heavy', desc: '超级重击' },
+            flippy: { name: 'Flippy', radius: 22, mass: 0.7, color: '#F4D03F', special: 'boost', desc: '加速冲刺' },
+            chief: { name: 'Chief', radius: 24, mass: 1.2, color: '#2E86AB', special: 'shockwave', desc: '冲击波' },
+            sarah: { name: 'Sarah', radius: 21, mass: 0.8, color: '#E91E63', special: 'boomerang', desc: '回旋镖' }
         };
         window.buddyTypes = buddyTypes; // 全局访问
+
+        // 当前选中的角色索引（用于自选功能）
+        let selectedBuddyIndex = 0;
 
         // 反派类型 - 基于Dog Man原作
         const villainTypes = {
@@ -2604,7 +2611,9 @@
                     { id: 'dogmanIcon', type: 'dogman' },
                     { id: 'lilpeteyIcon', type: 'lilpetey' },
                     { id: '80hdIcon', type: '80hd' },
-                    { id: 'flippyIcon', type: 'flippy' }
+                    { id: 'flippyIcon', type: 'flippy' },
+                    { id: 'chiefIcon', type: 'chief' },
+                    { id: 'sarahIcon', type: 'sarah' }
                 ];
 
                 iconData.forEach(icon => {
@@ -2633,6 +2642,8 @@
                 case 'lilpetey': drawLilPetey(radius * 0.85); break;
                 case '80hd': draw80HD(radius); break;
                 case 'flippy': drawFlippy(radius * 0.9); break;
+                case 'chief': drawChief(radius * 0.95); break;
+                case 'sarah': drawSarah(radius * 0.9); break;
             }
             ctx = origCtx;
         }
@@ -4196,6 +4207,174 @@
                     ctx.stroke();
                 }
             }
+        }
+
+        // ===== Chief 警长 (冲击波技能) =====
+        function drawChief(r) {
+            const scale = r / 24;
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2 * scale;
+
+            // 身体 (蓝色警服)
+            ctx.fillStyle = '#2E86AB';
+            ctx.beginPath();
+            ctx.ellipse(0, 8 * scale, 14 * scale, 12 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 警徽
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.moveTo(0, 2 * scale);
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * 144 - 90) * Math.PI / 180;
+                const x = Math.cos(angle) * 5 * scale;
+                const y = Math.sin(angle) * 5 * scale + 2 * scale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            // 头
+            ctx.fillStyle = '#FFDAB9';
+            ctx.beginPath();
+            ctx.arc(0, -8 * scale, 12 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 警帽
+            ctx.fillStyle = '#1a5276';
+            ctx.beginPath();
+            ctx.ellipse(0, -18 * scale, 14 * scale, 6 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#2E86AB';
+            ctx.beginPath();
+            ctx.arc(0, -16 * scale, 10 * scale, Math.PI, 0);
+            ctx.fill();
+            ctx.stroke();
+
+            // 帽徽
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(0, -18 * scale, 3 * scale, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼睛
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(-4 * scale, -10 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.ellipse(4 * scale, -10 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(-4 * scale, -10 * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.arc(4 * scale, -10 * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 嘴巴
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(0, -4 * scale, 4 * scale, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+
+            // 冲击波光环 (闪烁)
+            if (frameCount % 30 < 15) {
+                ctx.strokeStyle = 'rgba(46, 134, 171, 0.6)';
+                ctx.lineWidth = 3 * scale;
+                ctx.beginPath();
+                ctx.arc(0, 0, 28 * scale, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        // ===== Sarah 记者 (回旋镖技能) =====
+        function drawSarah(r) {
+            const scale = r / 21;
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2 * scale;
+
+            // 身体 (粉色套装)
+            ctx.fillStyle = '#E91E63';
+            ctx.beginPath();
+            ctx.ellipse(0, 8 * scale, 12 * scale, 11 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 麦克风
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.roundRect(-18 * scale, 3 * scale, 8 * scale, 4 * scale, 2 * scale);
+            ctx.fill();
+            ctx.fillStyle = '#666';
+            ctx.beginPath();
+            ctx.arc(-21 * scale, 5 * scale, 4 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 头
+            ctx.fillStyle = '#FFDAB9';
+            ctx.beginPath();
+            ctx.arc(0, -8 * scale, 11 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 头发 (棕色长发)
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.arc(0, -12 * scale, 12 * scale, Math.PI, 0);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(-10 * scale, -2 * scale, 4 * scale, 10 * scale, 0.2, 0, Math.PI * 2);
+            ctx.ellipse(10 * scale, -2 * scale, 4 * scale, 10 * scale, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼睛
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.ellipse(-4 * scale, -9 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.ellipse(4 * scale, -9 * scale, 3 * scale, 4 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#4169E1';
+            ctx.beginPath();
+            ctx.arc(-4 * scale, -9 * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.arc(4 * scale, -9 * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 睫毛
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1 * scale;
+            ctx.beginPath();
+            ctx.moveTo(-6 * scale, -13 * scale);
+            ctx.lineTo(-7 * scale, -15 * scale);
+            ctx.moveTo(-4 * scale, -13 * scale);
+            ctx.lineTo(-4 * scale, -15 * scale);
+            ctx.moveTo(4 * scale, -13 * scale);
+            ctx.lineTo(4 * scale, -15 * scale);
+            ctx.moveTo(6 * scale, -13 * scale);
+            ctx.lineTo(7 * scale, -15 * scale);
+            ctx.stroke();
+
+            // 嘴巴 (微笑)
+            ctx.strokeStyle = '#C71585';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(0, -4 * scale, 4 * scale, 0.3, Math.PI - 0.3);
+            ctx.stroke();
+
+            // 回旋效果
+            const angle = frameCount * 0.1;
+            ctx.strokeStyle = 'rgba(233, 30, 99, 0.5)';
+            ctx.lineWidth = 2 * scale;
+            ctx.beginPath();
+            ctx.arc(0, 0, 26 * scale, angle, angle + Math.PI);
+            ctx.stroke();
         }
 
         function drawVillain(villain) {
@@ -6426,6 +6605,100 @@
                             alpha: 1
                         });
                     }
+                } else if (projectile.special === 'shockwave') {
+                    // Chief 冲击波技能 - 范围伤害
+                    projectile.specialUsed = true;
+                    playSimpleSound(150, 0.3, 'square');
+                    playSimpleSound(100, 0.4, 'sawtooth');
+
+                    // 大范围冲击波
+                    if (!window.shockwaves) window.shockwaves = [];
+                    window.shockwaves.push({
+                        x: projectile.x, y: projectile.y,
+                        radius: 10, maxRadius: 200,
+                        color: 'rgba(46, 134, 171, 0.7)', lineWidth: 12
+                    });
+
+                    // 对范围内的方块和敌人造成伤害
+                    const shockRadius = 150;
+                    blocks.forEach(b => {
+                        const dist = Math.sqrt((b.x + b.w/2 - projectile.x)**2 + (b.y + b.h/2 - projectile.y)**2);
+                        if (dist < shockRadius && b.type !== 'stone') {
+                            b.health -= 50;
+                        }
+                    });
+                    villains.forEach(v => {
+                        if (v.alive) {
+                            const dist = Math.sqrt((v.x + v.width/2 - projectile.x)**2 + (v.y + v.height/2 - projectile.y)**2);
+                            if (dist < shockRadius) {
+                                v.health -= 1;
+                                if (v.health <= 0) {
+                                    v.alive = false;
+                                    score += 5000;
+                                }
+                            }
+                        }
+                    });
+
+                    // 冲击波粒子
+                    for (let i = 0; i < 30; i++) {
+                        const angle = (i / 30) * Math.PI * 2;
+                        particles.push({
+                            x: projectile.x,
+                            y: projectile.y,
+                            vx: Math.cos(angle) * 8,
+                            vy: Math.sin(angle) * 8,
+                            size: 5 + Math.random() * 5,
+                            color: '#2E86AB',
+                            alpha: 1
+                        });
+                    }
+                } else if (projectile.special === 'boomerang') {
+                    // Sarah 回旋镖技能 - 返回并再次攻击
+                    projectile.specialUsed = true;
+                    projectile.boomerangActive = true;
+                    playSimpleSound(600, 0.15, 'sine');
+                    playSimpleSound(800, 0.15, 'sine');
+
+                    // 反转速度并加速
+                    projectile.vx = -projectile.vx * 1.3;
+                    projectile.vy = -projectile.vy * 0.5 - 5;
+
+                    // 回旋特效
+                    for (let i = 0; i < 20; i++) {
+                        const angle = (i / 20) * Math.PI * 2;
+                        particles.push({
+                            x: projectile.x,
+                            y: projectile.y,
+                            vx: Math.cos(angle) * 5,
+                            vy: Math.sin(angle) * 5,
+                            size: 4 + Math.random() * 4,
+                            color: '#E91E63',
+                            alpha: 1
+                        });
+                    }
+                } else if (projectile.special === 'heavy') {
+                    // 80-HD 超级重击 - 直接向下砸
+                    projectile.specialUsed = true;
+                    playSimpleSound(80, 0.3, 'square');
+
+                    // 增加质量和向下速度
+                    projectile.mass = 5;
+                    projectile.vy = Math.abs(projectile.vy) + 15;
+                    projectile.vx *= 0.3;
+
+                    // 重击特效
+                    for (let i = 0; i < 15; i++) {
+                        particles.push({
+                            x: projectile.x,
+                            y: projectile.y + 20,
+                            vx: (Math.random() - 0.5) * 6,
+                            vy: Math.random() * 5,
+                            size: 6 + Math.random() * 6,
+                            color: '#5DADE2',
+                            alpha: 1
+                        });
+                    }
                 }
             }
         }
@@ -6561,7 +6834,10 @@
             panel.innerHTML = '';
             buddies.forEach((b, i) => {
                 const slot = document.createElement('div');
-                slot.className = 'buddy-slot' + (i === currentBuddyIndex && !b.used ? ' active' : '') + (b.used ? ' used' : '');
+                slot.className = 'buddy-slot' +
+                    (i === currentBuddyIndex && !b.used ? ' active' : '') +
+                    (b.used ? ' used' : '') +
+                    (i === selectedBuddyIndex && !b.used ? ' selected' : '');
 
                 // 创建小canvas显示角色图标
                 const miniCanvas = document.createElement('canvas');
@@ -6579,9 +6855,30 @@
                 miniCtx.restore();
 
                 slot.appendChild(miniCanvas);
-                slot.title = b.name;
+                slot.title = b.name + ' - ' + (buddyTypes[b.type]?.desc || '');
+
+                // 点击选择角色（自选功能）
+                if (!b.used && gameState === 'ready') {
+                    slot.style.cursor = 'pointer';
+                    slot.addEventListener('click', () => selectBuddy(i));
+                    slot.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        selectBuddy(i);
+                    });
+                }
+
                 panel.appendChild(slot);
             });
+        }
+
+        // 选择角色（自选功能）
+        function selectBuddy(index) {
+            if (buddies[index] && !buddies[index].used && gameState === 'ready') {
+                currentBuddyIndex = index;
+                selectedBuddyIndex = index;
+                playSimpleSound(500, 0.1, 'sine'); // 选择音效
+                renderBuddiesPanel();
+            }
         }
 
         function showLevelSelect() {
