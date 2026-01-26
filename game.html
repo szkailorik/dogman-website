@@ -2939,6 +2939,12 @@
         // 初始化
         // ========================================
         function init() {
+            // 初始化全局数组
+            window.damageNumbers = [];
+            window.floatingTexts = [];
+            window.shockwaves = [];
+            window.bigTexts = [];
+
             loadLevel(currentLevel);
             generateLevelButtons();
             setupEventListeners();
@@ -6097,7 +6103,9 @@
                     if (blockBottom >= v.y && block.y < v.y + v.height &&
                         blockCenterX > v.x && blockCenterX < v.x + v.width &&
                         block.vy > 3) {
-                        v.health -= 1;
+                        // 方块砸到敌人的伤害基于下落速度
+                        const blockDamage = Math.round(10 + block.vy * 5);
+                        v.health -= blockDamage;
                         if (v.health <= 0) {
                             v.alive = false;
                             score += 500;
@@ -6312,8 +6320,8 @@
                                 const vCenterY = v.y + v.height / 2;
                                 const dist = Math.hypot(fo.x - vCenterX, fo.y - vCenterY);
                                 if (dist < fo.size + Math.max(v.width, v.height) / 2) {
-                                    // 星星只造成1点伤害，不是秒杀！
-                                    v.health -= 1;
+                                    // 星星造成30点伤害
+                                    v.health -= 30;
                                     score += 300;
                                     fo.hit = true;
                                     createGoodHitEffect(vCenterX, vCenterY);
@@ -7046,7 +7054,11 @@
             villain.health -= finalDamage;
 
             // 显示伤害数字
-            showDamageNumber(villain.x + villain.width/2, villain.y, finalDamage, hitType);
+            try {
+                showDamageNumber(villain.x + villain.width/2, villain.y, finalDamage, hitType);
+            } catch(e) {
+                console.error('showDamageNumber error:', e);
+            }
 
             // 根据撞击力度调整弹射物速度衰减
             if (hitType === 'critical' || hitType === 'heavy') {
@@ -7061,7 +7073,11 @@
             }
 
             // 根据打击类型播放不同音效
-            playImpactByType(hitType);
+            try {
+                playImpactByType(hitType);
+            } catch(e) {
+                console.error('playImpactByType error:', e);
+            }
 
             // 敌人受击表情
             if (villain.alive) {
@@ -7117,52 +7133,26 @@
 
         // 根据打击类型播放音效
         function playImpactByType(hitType) {
-            if (!soundEnabled || !audioContext) return;
+            if (!soundEnabled) return;
 
-            try {
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-
-                switch(hitType) {
-                    case 'critical':
-                        // 暴击 - 强烈低沉撞击 + 高频爆裂
-                        osc.frequency.setValueAtTime(80, audioContext.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(40, audioContext.currentTime + 0.15);
-                        gain.gain.setValueAtTime(0.4, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                        osc.type = 'sawtooth';
-                        break;
-                    case 'heavy':
-                        osc.frequency.setValueAtTime(100, audioContext.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.1);
-                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                        osc.type = 'square';
-                        break;
-                    case 'medium':
-                        osc.frequency.setValueAtTime(150, audioContext.currentTime);
-                        gain.gain.setValueAtTime(0.2, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                        osc.type = 'triangle';
-                        break;
-                    case 'light':
-                        osc.frequency.setValueAtTime(200, audioContext.currentTime);
-                        gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
-                        osc.type = 'sine';
-                        break;
-                    default:
-                        osc.frequency.setValueAtTime(300, audioContext.currentTime);
-                        gain.gain.setValueAtTime(0.1, audioContext.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
-                        osc.type = 'sine';
-                }
-
-                osc.start();
-                osc.stop(audioContext.currentTime + 0.2);
-            } catch(e) {}
+            // 使用 playSimpleSound 函数，更安全
+            switch(hitType) {
+                case 'critical':
+                    playSimpleSound(80, 0.2, 'sawtooth');
+                    playSimpleSound(120, 0.15, 'square');
+                    break;
+                case 'heavy':
+                    playSimpleSound(100, 0.15, 'square');
+                    break;
+                case 'medium':
+                    playSimpleSound(150, 0.1, 'triangle');
+                    break;
+                case 'light':
+                    playSimpleSound(200, 0.08, 'sine');
+                    break;
+                default:
+                    playSimpleSound(300, 0.05, 'sine');
+            }
         }
 
         function createDebrisFromBlock(block) {
