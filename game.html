@@ -201,6 +201,25 @@
             box-shadow: 0 0 15px rgba(255,215,0,0.3);
         }
 
+        .lang-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(100,200,255,0.5);
+            background: linear-gradient(135deg, rgba(100,200,255,0.2), rgba(100,200,255,0.1));
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .lang-btn:hover {
+            background: linear-gradient(135deg, rgba(100,200,255,0.4), rgba(100,200,255,0.2));
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(100,200,255,0.3);
+        }
+
         .game-wrapper {
             background: linear-gradient(135deg, #1a1a2e, #0a0a1a);
             border-radius: 15px;
@@ -871,6 +890,7 @@
             </div>
             <div class="sound-controls">
                 <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="音效">🔊</button>
+                <button class="lang-btn" id="langBtn" onclick="toggleLanguage()" title="中文/English">中</button>
             </div>
         </div>
 
@@ -955,6 +975,243 @@
     </div>
 
     <script>
+        // ========================================
+        // 多语言系统
+        // ========================================
+        let currentLang = localStorage.getItem('dogmanGameLang') || 'zh';
+
+        const translations = {
+            zh: {
+                // UI 标签
+                level: '关卡',
+                score: '分数',
+                villains: '反派',
+                sound: '音效',
+                restart: '重玩本关',
+                nextLevel: '下一关',
+                selectLevel: '选择关卡',
+                backHome: '返回主页',
+                levels: '关卡',
+
+                // 游戏说明
+                instructions: '游戏说明',
+                goal: '目标：',
+                goalText: '用弹弓发射超级伙伴，打倒所有反派！',
+                controls: '操作：',
+                controlsText: '拖动角色向左后方拉动，松开发射。拉得越远力量越大！',
+                scoring: '评分：',
+                scoringText: '用越少的角色完成关卡，获得越多星星！',
+                tips: '提示：',
+                tipsText: '飞行中点击屏幕可使用特殊技能！',
+
+                // 角色技能
+                standardAttack: '标准攻击',
+                splitX3: '分裂×3',
+                superHeavy: '超级重击',
+                speedBoost: '加速冲刺',
+                shockwave: '冲击波',
+                boomerang: '回旋镖',
+
+                // 角色描述
+                dogCop: '狗头警察',
+                littleCat: '小橘猫',
+                robotDog: '机器狗',
+                fishPower: '念力鱼',
+                policeChief: '警察局长',
+                catGirl: '猫女侠',
+
+                // 运气效果
+                badLuck: '坏运气!',
+                goodLuck: '好运气!',
+                meteorStrike: '☄️ 陨石来袭!',
+                meteorShower: '☄️☄️ 流星雨!',
+                enemyRevive: '👻 敌人复活!',
+                pointsLost: '💔 扣分!',
+                luckyStar: '⭐ 幸运星!',
+                starShower: '🌟 星星雨!',
+                bonusPoints: '💰 奖励积分!',
+                extraBuddy: '🎁 额外道具!',
+                blockDestroy: '💥 方块破坏!',
+
+                // 游戏结果
+                levelComplete: '关卡完成!',
+                allComplete: '恭喜通关!',
+                failed: '失败',
+                finalScore: '得分',
+                replay: '重玩',
+                next: '下一关',
+
+                // 其他
+                projectileDestroyed: '💀 坏运气! 弹射物被摧毁!',
+                enemyEliminated: '⭐ 好运气! 敌人被消灭!',
+                selectLevelTitle: '选择关卡',
+                langBtnText: '中',
+                close: '关闭',
+                gameSubtitle: '超级伙伴弹弓大战',
+                clickToStart: '点击开始游戏',
+                soundNotice: '🔊 点击开始以启用游戏音效'
+            },
+            en: {
+                // UI Labels
+                level: 'Level',
+                score: 'Score',
+                villains: 'Villains',
+                sound: 'Sound',
+                restart: 'Restart',
+                nextLevel: 'Next',
+                selectLevel: 'Levels',
+                backHome: 'Home',
+                levels: 'Levels',
+
+                // Instructions
+                instructions: 'How to Play',
+                goal: 'Goal:',
+                goalText: 'Launch super buddies with the slingshot to defeat all villains!',
+                controls: 'Controls:',
+                controlsText: 'Drag character backwards, release to launch. Pull further for more power!',
+                scoring: 'Scoring:',
+                scoringText: 'Use fewer characters to complete levels and earn more stars!',
+                tips: 'Tip:',
+                tipsText: 'Click during flight to use special abilities!',
+
+                // Character Skills
+                standardAttack: 'Standard',
+                splitX3: 'Split ×3',
+                superHeavy: 'Heavy Hit',
+                speedBoost: 'Speed Boost',
+                shockwave: 'Shockwave',
+                boomerang: 'Boomerang',
+
+                // Character Descriptions
+                dogCop: 'Dog Cop',
+                littleCat: 'Little Cat',
+                robotDog: 'Robot Dog',
+                fishPower: 'Mind Fish',
+                policeChief: 'Police Chief',
+                catGirl: 'Cat Girl',
+
+                // Luck Effects
+                badLuck: 'Bad Luck!',
+                goodLuck: 'Good Luck!',
+                meteorStrike: '☄️ Meteor Strike!',
+                meteorShower: '☄️☄️ Meteor Shower!',
+                enemyRevive: '👻 Enemy Revived!',
+                pointsLost: '💔 Points Lost!',
+                luckyStar: '⭐ Lucky Star!',
+                starShower: '🌟 Star Shower!',
+                bonusPoints: '💰 Bonus Points!',
+                extraBuddy: '🎁 Extra Buddy!',
+                blockDestroy: '💥 Blocks Destroyed!',
+
+                // Game Results
+                levelComplete: 'Level Complete!',
+                allComplete: 'Congratulations!',
+                failed: 'Failed',
+                finalScore: 'Score',
+                replay: 'Replay',
+                next: 'Next',
+
+                // Others
+                projectileDestroyed: '💀 Bad Luck! Projectile destroyed!',
+                enemyEliminated: '⭐ Good Luck! Enemy eliminated!',
+                selectLevelTitle: 'Select Level',
+                langBtnText: 'EN',
+                close: 'Close',
+                gameSubtitle: 'Supa Buddies Slingshot',
+                clickToStart: 'Click to Start',
+                soundNotice: '🔊 Click to enable game sounds'
+            }
+        };
+
+        function t(key) {
+            return translations[currentLang][key] || translations['zh'][key] || key;
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('dogmanGameLang', currentLang);
+            updateAllText();
+            const langBtn = document.getElementById('langBtn');
+            langBtn.textContent = t('langBtnText');
+            langBtn.title = currentLang === 'zh' ? '中文/English' : 'English/中文';
+        }
+
+        function updateAllText() {
+            // 更新 UI 标签
+            document.querySelectorAll('.info-label').forEach((el, i) => {
+                const keys = ['level', 'score', 'villains'];
+                if (keys[i]) el.textContent = t(keys[i]);
+            });
+
+            // 更新按钮文字
+            document.querySelector('.btn-restart').textContent = t('restart');
+            document.querySelector('.btn-next').textContent = t('nextLevel');
+            document.querySelector('.btn-levels').textContent = t('selectLevel');
+            document.querySelector('.back-btn').textContent = t('backHome');
+
+            // 更新游戏说明
+            const instructions = document.querySelector('.instructions');
+            if (instructions) {
+                instructions.querySelector('h3').textContent = t('instructions');
+                const paragraphs = instructions.querySelectorAll('p');
+                if (paragraphs[0]) paragraphs[0].innerHTML = `🎯 <strong>${t('goal')}</strong>${t('goalText')}`;
+                if (paragraphs[1]) paragraphs[1].innerHTML = `🖱️ <strong>${t('controls')}</strong>${t('controlsText')}`;
+                if (paragraphs[2]) paragraphs[2].innerHTML = `⭐ <strong>${t('scoring')}</strong>${t('scoringText')}`;
+                if (paragraphs[3]) paragraphs[3].innerHTML = `💡 <strong>${t('tips')}</strong>${t('tipsText')}`;
+            }
+
+            // 更新角色技能描述
+            const buddyCards = document.querySelectorAll('.buddy-card .skill');
+            const skillTexts = [
+                `${t('dogCop')} | ${t('standardAttack')}`,
+                `${t('littleCat')} | ${t('splitX3')}`,
+                `${t('robotDog')} | ${t('superHeavy')}`,
+                `${t('fishPower')} | ${t('speedBoost')}`,
+                `${t('policeChief')} | ${t('shockwave')}`,
+                `${t('catGirl')} | ${t('boomerang')}`
+            ];
+            buddyCards.forEach((el, i) => {
+                if (skillTexts[i]) el.textContent = skillTexts[i];
+            });
+
+            // 更新关卡选择标题
+            const levelSelectTitle = document.querySelector('.level-select .modal-title');
+            if (levelSelectTitle) levelSelectTitle.textContent = t('selectLevelTitle');
+
+            // 更新结果弹窗按钮
+            const resultBtns = document.querySelectorAll('.result-btn');
+            resultBtns.forEach(btn => {
+                if (btn.classList.contains('btn-restart')) btn.textContent = t('replay');
+                if (btn.classList.contains('btn-next')) btn.textContent = t('next');
+                if (btn.classList.contains('btn-levels')) btn.textContent = t('levels');
+            });
+
+            // 更新关闭按钮
+            const closeBtn = document.querySelector('.close-modal-btn');
+            if (closeBtn) closeBtn.textContent = t('close');
+
+            // 更新启动画面
+            const splashSubtitle = document.querySelector('#splash-screen p[style*="color: #888"]');
+            if (splashSubtitle) splashSubtitle.textContent = t('gameSubtitle');
+            const startBtn = document.querySelector('.start-btn');
+            if (startBtn) startBtn.textContent = t('clickToStart');
+            const soundNotice = document.querySelector('.sound-notice');
+            if (soundNotice) soundNotice.textContent = t('soundNotice');
+
+            // 更新游戏副标题
+            const gameSubtitle = document.querySelector('.game-subtitle');
+            if (gameSubtitle) gameSubtitle.textContent = t('goalText');
+        }
+
+        // 页面加载后更新文字
+        document.addEventListener('DOMContentLoaded', function() {
+            const langBtn = document.getElementById('langBtn');
+            if (langBtn) {
+                langBtn.textContent = t('langBtnText');
+            }
+            updateAllText();
+        });
+
         // ========================================
         // 兼容性 - roundRect polyfill
         // ========================================
@@ -6557,31 +6814,36 @@
             window.floatingTexts.push(textObj);
         }
 
-        // 获取效果名称
+        // 获取效果名称 - 支持多语言
         function getEffectName(effect, type) {
-            const names = {
-                'meteor': '☄️ 陨石来袭!',
-                'multiMeteor': '☄️☄️ 流星雨!',
-                'enemyHeal': '💗 敌人回血!',
-                'losePoints': '💔 扣分!',
-                'starfall': '⭐ 幸运星!',
-                'multiStar': '🌟 星星雨!',
-                'bonusPoints': '💰 奖励积分!',
-                'extraBuddy': '🎁 额外道具!',
-                'destroyBlocks': '💥 方块破坏!'
+            const nameKeys = {
+                'meteor': 'meteorStrike',
+                'multiMeteor': 'meteorShower',
+                'enemyHeal': 'enemyRevive',
+                'losePoints': 'pointsLost',
+                'starfall': 'luckyStar',
+                'multiStar': 'starShower',
+                'bonusPoints': 'bonusPoints',
+                'extraBuddy': 'extraBuddy',
+                'destroyBlocks': 'blockDestroy'
             };
-            return names[effect] || (type === 'bad' ? '坏运气!' : '好运气!');
+            if (nameKeys[effect]) {
+                return t(nameKeys[effect]);
+            }
+            return type === 'bad' ? t('badLuck') : t('goodLuck');
         }
 
-        // 获取道具名称
+        // 获取道具名称 - 支持多语言
         function getBuddyName(type) {
-            const names = {
-                'dogman': '狗超人',
-                'lilpetey': '小皮弟',
-                '80hd': '机器狗',
-                'flippy': '念力鱼'
+            const nameKeys = {
+                'dogman': 'dogCop',
+                'lilpetey': 'littleCat',
+                '80hd': 'robotDog',
+                'flippy': 'fishPower',
+                'chief': 'policeChief',
+                'sarah': 'catGirl'
             };
-            return names[type] || type;
+            return nameKeys[type] ? t(nameKeys[type]) : type;
         }
 
         function handleVillainCollision(p, villain) {
@@ -6876,7 +7138,7 @@
             });
 
             // 显示大型警告文字
-            showBigText('💀 坏运气! 弹射物被摧毁!', '#FF0000', 120);
+            showBigText(t('projectileDestroyed'), '#FF0000', 120);
         }
 
         // 好运气击中效果 - 明显的金色/绿色庆祝
@@ -6910,7 +7172,7 @@
             });
 
             // 显示庆祝文字
-            showBigText('⭐ 好运气! 敌人被消灭!', '#00FF00', 100);
+            showBigText(t('enemyEliminated'), '#00FF00', 100);
         }
 
         // 显示大型文字提示
@@ -7299,18 +7561,22 @@
 
         function showResult(won, stars, bonusScore = 0, unusedCount = 0) {
             document.getElementById('resultTitle').textContent = won ?
-                (currentLevel === MAX_LEVELS ? '恭喜通关!' : '关卡完成!') : '失败';
+                (currentLevel === MAX_LEVELS ? t('allComplete') : t('levelComplete')) : t('failed');
 
             let starText = '';
             for (let i = 0; i < 3; i++) starText += i < stars ? '⭐' : '☆';
             document.getElementById('resultStars').textContent = starText;
 
-            // 显示详细分数
-            let scoreHTML = `基础分数: ${score - bonusScore}`;
+            // 显示详细分数 - 支持多语言
+            const baseScoreText = currentLang === 'zh' ? '基础分数' : 'Base Score';
+            const bonusText = currentLang === 'zh' ? '🎁 道具回收奖励' : '🎁 Buddy Bonus';
+            const totalText = currentLang === 'zh' ? '总分' : 'Total';
+
+            let scoreHTML = `${baseScoreText}: ${score - bonusScore}`;
             if (bonusScore > 0) {
-                scoreHTML += `<br><span style="color: #4CAF50;">🎁 道具回收奖励 x${unusedCount}: +${bonusScore}</span>`;
+                scoreHTML += `<br><span style="color: #4CAF50;">${bonusText} x${unusedCount}: +${bonusScore}</span>`;
             }
-            scoreHTML += `<br><strong style="font-size: 1.3em;">总分: ${score}</strong>`;
+            scoreHTML += `<br><strong style="font-size: 1.3em;">${totalText}: ${score}</strong>`;
             document.getElementById('resultScore').innerHTML = scoreHTML;
 
             document.getElementById('resultNextBtn').style.display = (won && currentLevel < MAX_LEVELS) ? 'inline-block' : 'none';
