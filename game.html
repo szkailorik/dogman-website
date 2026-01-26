@@ -1225,6 +1225,57 @@
             }
         }
 
+        // 敌人嘲笑音效 - 像愤怒的小鸟里的猪
+        function playVillainTauntSound(type) {
+            if (!soundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            try {
+                const sounds = {
+                    // 猪/猫的各种嘲笑声
+                    laugh: () => {
+                        // 哈哈哈的笑声
+                        [300, 350, 300, 400].forEach((freq, i) => {
+                            setTimeout(() => {
+                                playSimpleSound(freq, 0.1, 'sine');
+                            }, i * 80);
+                        });
+                    },
+                    snort: () => {
+                        // 哼哼声（猪）
+                        playSimpleSound(150, 0.15, 'sawtooth');
+                        setTimeout(() => playSimpleSound(180, 0.12, 'sawtooth'), 100);
+                    },
+                    giggle: () => {
+                        // 咯咯笑
+                        [400, 450, 500, 450, 400].forEach((freq, i) => {
+                            setTimeout(() => {
+                                playSimpleSound(freq, 0.08, 'sine');
+                            }, i * 60);
+                        });
+                    },
+                    taunt: () => {
+                        // 嘲笑声 - 嘿嘿嘿
+                        [250, 300, 250].forEach((freq, i) => {
+                            setTimeout(() => {
+                                playSimpleSound(freq, 0.12, 'triangle');
+                            }, i * 100);
+                        });
+                    },
+                    raspberry: () => {
+                        // 吐舌头的声音
+                        playSimpleSound(100, 0.2, 'sawtooth');
+                    }
+                };
+
+                const soundTypes = ['laugh', 'snort', 'giggle', 'taunt', 'raspberry'];
+                const sound = type || soundTypes[Math.floor(Math.random() * soundTypes.length)];
+                if (sounds[sound]) sounds[sound]();
+            } catch (e) {
+                console.error('Taunt sound failed:', e);
+            }
+        }
+
         // 在所有用户交互时尝试解锁音频
         function setupIOSAudioUnlock() {
             const unlockEvents = ['touchstart', 'touchend', 'mousedown', 'click'];
@@ -2713,7 +2764,11 @@
                     maxHealth: v.type === 'robot' || v.type === 'piggy' ? 2 : 1,
                     alive: true,
                     vy: 0,
-                    angle: 0
+                    angle: 0,
+                    // 嘲笑表情系统
+                    expression: 'normal',  // normal, laugh, taunt, wink, scared
+                    expressionTimer: Math.random() * 180 + 60,  // 随机开始时间
+                    lastTauntTime: 0
                 };
             });
 
@@ -4457,22 +4512,23 @@
 
             const hw = villain.width / 2;
             const hh = villain.height / 2;
+            const expr = villain.expression || 'normal';
 
             switch(villain.type) {
                 case 'petey':
-                    drawPeteyVillain(hw, hh);
+                    drawPeteyVillain(hw, hh, expr);
                     break;
                 case 'flatpetey':
-                    drawFlatPetey(hw, hh);
+                    drawFlatPetey(hw, hh, expr);
                     break;
                 case 'piggy':
-                    drawPiggy(hw, hh);
+                    drawPiggy(hw, hh, expr);
                     break;
                 case 'robot':
-                    drawRobotVillain(hw, hh);
+                    drawRobotVillain(hw, hh, expr);
                     break;
                 default:
-                    drawPeteyVillain(hw, hh);
+                    drawPeteyVillain(hw, hh, expr);
             }
 
             // 血条
@@ -4500,7 +4556,8 @@
         // Petey - 邪恶的橘色虎斑猫
         // Petey - Dav Pilkey简笔画风格
         // 橘色猫，简单的形状和黑色轮廓
-        function drawPeteyVillain(hw, hh) {
+        function drawPeteyVillain(hw, hh, expression) {
+            const expr = expression || 'normal';
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
 
@@ -4557,26 +4614,73 @@
             ctx.fill();
             ctx.stroke();
 
-            // 眼睛 - Dav Pilkey风格: 高瘦黑色椭圆 (邪恶表情)
+            // 眼睛 - 根据表情变化
             ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.ellipse(-6, -hh + 12, 3, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(6, -hh + 12, 3, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
+            if (expr === 'wink') {
+                // 眨眼 - 左眼闭上
+                ctx.beginPath();
+                ctx.moveTo(-9, -hh + 12);
+                ctx.lineTo(-3, -hh + 12);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 12, 3, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (expr === 'laugh' || expr === 'taunt') {
+                // 大笑/嘲笑 - 眼睛眯成弯月
+                ctx.beginPath();
+                ctx.arc(-6, -hh + 12, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(6, -hh + 12, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+            } else if (expr === 'scared') {
+                // 害怕 - 眼睛变大变圆
+                ctx.beginPath();
+                ctx.ellipse(-6, -hh + 12, 4, 7, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 12, 4, 7, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // 眼白
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(-7, -hh + 10, 1.5, 0, Math.PI * 2);
+                ctx.arc(5, -hh + 10, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 正常邪恶眼睛
+                ctx.beginPath();
+                ctx.ellipse(-6, -hh + 12, 3, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 12, 3, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
-            // 邪恶眉毛 (简单的V形线)
+            // 眉毛 - 根据表情变化
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-12, -hh + 4);
-            ctx.lineTo(-3, -hh + 7);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(12, -hh + 4);
-            ctx.lineTo(3, -hh + 7);
-            ctx.stroke();
+            if (expr === 'scared') {
+                // 害怕 - 眉毛上扬
+                ctx.beginPath();
+                ctx.moveTo(-10, -hh + 5);
+                ctx.lineTo(-3, -hh + 3);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(10, -hh + 5);
+                ctx.lineTo(3, -hh + 3);
+                ctx.stroke();
+            } else {
+                // 邪恶眉毛
+                ctx.beginPath();
+                ctx.moveTo(-12, -hh + 4);
+                ctx.lineTo(-3, -hh + 7);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(12, -hh + 4);
+                ctx.lineTo(3, -hh + 7);
+                ctx.stroke();
+            }
 
             // 鼻子 (简单小三角)
             ctx.fillStyle = '#FF6B6B';
@@ -4590,7 +4694,6 @@
             // 胡须 (简单的直线)
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 1;
-            // 左边
             ctx.beginPath();
             ctx.moveTo(-6, -hh + 20);
             ctx.lineTo(-18, -hh + 18);
@@ -4599,7 +4702,6 @@
             ctx.moveTo(-6, -hh + 22);
             ctx.lineTo(-18, -hh + 22);
             ctx.stroke();
-            // 右边
             ctx.beginPath();
             ctx.moveTo(6, -hh + 20);
             ctx.lineTo(18, -hh + 18);
@@ -4609,21 +4711,53 @@
             ctx.lineTo(18, -hh + 22);
             ctx.stroke();
 
-            // 邪恶笑容 (简单弧线 + W形嘴)
+            // 嘴巴 - 根据表情变化
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-6, -hh + 26);
-            ctx.lineTo(-3, -hh + 29);
-            ctx.lineTo(0, -hh + 26);
-            ctx.lineTo(3, -hh + 29);
-            ctx.lineTo(6, -hh + 26);
-            ctx.stroke();
+            if (expr === 'laugh') {
+                // 大笑 - 张大嘴巴
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 28, 6, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // 舌头
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 30, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (expr === 'taunt') {
+                // 嘲笑 - 吐舌头
+                ctx.beginPath();
+                ctx.arc(0, -hh + 27, 5, 0, Math.PI);
+                ctx.stroke();
+                // 舌头伸出
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 32, 3, 4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+            } else if (expr === 'scared') {
+                // 害怕 - 张大O型嘴
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 28, 4, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 正常邪恶笑容
+                ctx.beginPath();
+                ctx.moveTo(-6, -hh + 26);
+                ctx.lineTo(-3, -hh + 29);
+                ctx.lineTo(0, -hh + 26);
+                ctx.lineTo(3, -hh + 29);
+                ctx.lineTo(6, -hh + 26);
+                ctx.stroke();
+            }
         }
 
         // Flat Petey - 纸片版Petey
-        // Flat Petey - 通缉令海报风格
-        function drawFlatPetey(hw, hh) {
+        // Flat Petey - 通缉令海报风格 (纸质通缉令不支持动态表情)
+        function drawFlatPetey(hw, hh, expression) {
             // ===== 通缉令纸张 =====
             ctx.fillStyle = '#FFF8E1';
             ctx.strokeStyle = '#8B4513';
@@ -4770,7 +4904,8 @@
 
         // Piggy - Dav Pilkey简笔画风格
         // 粉色猪，简单形状，黑色轮廓
-        function drawPiggy(hw, hh) {
+        function drawPiggy(hw, hh, expression) {
+            const expr = expression || 'normal';
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
 
@@ -4799,26 +4934,73 @@
             ctx.fill();
             ctx.stroke();
 
-            // 眼睛 - Dav Pilkey风格: 高瘦黑色椭圆
+            // 眼睛 - 根据表情变化
             ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.ellipse(-6, -hh + 15, 3, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(6, -hh + 15, 3, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
+            if (expr === 'wink') {
+                // 眨眼
+                ctx.beginPath();
+                ctx.moveTo(-9, -hh + 15);
+                ctx.lineTo(-3, -hh + 15);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 15, 3, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (expr === 'laugh' || expr === 'taunt') {
+                // 大笑 - 眯眼
+                ctx.beginPath();
+                ctx.arc(-6, -hh + 15, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(6, -hh + 15, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+            } else if (expr === 'scared') {
+                // 害怕 - 眼睛变大
+                ctx.beginPath();
+                ctx.ellipse(-6, -hh + 15, 4, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 15, 4, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // 眼白
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(-7, -hh + 13, 1.5, 0, Math.PI * 2);
+                ctx.arc(5, -hh + 13, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 正常眼睛
+                ctx.beginPath();
+                ctx.ellipse(-6, -hh + 15, 3, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(6, -hh + 15, 3, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
-            // 愤怒眉毛 (简单V形)
+            // 眉毛 - 根据表情变化
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-10, -hh + 7);
-            ctx.lineTo(-3, -hh + 11);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(10, -hh + 7);
-            ctx.lineTo(3, -hh + 11);
-            ctx.stroke();
+            if (expr === 'scared') {
+                // 害怕 - 眉毛上扬
+                ctx.beginPath();
+                ctx.moveTo(-10, -hh + 8);
+                ctx.lineTo(-3, -hh + 6);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(10, -hh + 8);
+                ctx.lineTo(3, -hh + 6);
+                ctx.stroke();
+            } else {
+                // 愤怒眉毛
+                ctx.beginPath();
+                ctx.moveTo(-10, -hh + 7);
+                ctx.lineTo(-3, -hh + 11);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(10, -hh + 7);
+                ctx.lineTo(3, -hh + 11);
+                ctx.stroke();
+            }
 
             // 猪鼻子 (简单椭圆 + 两个鼻孔)
             ctx.fillStyle = '#FF69B4';
@@ -4835,12 +5017,44 @@
             ctx.arc(3, -hh + 24, 2, 0, Math.PI * 2);
             ctx.fill();
 
-            // 嘴巴 (简单弧线)
+            // 嘴巴 - 根据表情变化
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(0, -hh + 30, 5, 0.2 * Math.PI, 0.8 * Math.PI);
-            ctx.stroke();
+            if (expr === 'laugh') {
+                // 大笑 - 张大嘴巴哈哈
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 32, 6, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // 舌头
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 34, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (expr === 'taunt') {
+                // 嘲笑 - 哼哼的表情
+                ctx.beginPath();
+                ctx.arc(0, -hh + 31, 5, 0, Math.PI);
+                ctx.stroke();
+                // 吐舌头
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 36, 3, 4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+            } else if (expr === 'scared') {
+                // 害怕 - O型嘴
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(0, -hh + 32, 4, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 正常嘴巴
+                ctx.beginPath();
+                ctx.arc(0, -hh + 30, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+                ctx.stroke();
+            }
 
             // 眼镜 (简单圆框)
             ctx.strokeStyle = '#000000';
@@ -4870,7 +5084,8 @@
         // Robot - 邪恶机器人
         // Robot - Dav Pilkey简笔画风格
         // 简单的方块机器人，黑色轮廓
-        function drawRobotVillain(hw, hh) {
+        function drawRobotVillain(hw, hh, expression) {
+            const expr = expression || 'normal';
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
 
@@ -4896,36 +5111,98 @@
             ctx.lineTo(0, -hh - 10);
             ctx.stroke();
 
-            // 天线顶部 (红色圆)
-            ctx.fillStyle = '#FF0000';
+            // 天线顶部 - 根据表情变化颜色
+            let antennaColor = '#FF0000';
+            if (expr === 'laugh' || expr === 'taunt') {
+                antennaColor = '#FFFF00'; // 黄色 - 开心/嘲笑
+            } else if (expr === 'scared') {
+                antennaColor = '#00FF00'; // 绿色 - 害怕（快速闪烁效果）
+            }
+            ctx.fillStyle = antennaColor;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.arc(0, -hh - 12, 4, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
 
-            // 眼睛 - 简单红色圆形 (邪恶机器人)
-            ctx.fillStyle = '#FF0000';
-            ctx.beginPath();
-            ctx.arc(-8, -hh + 13, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#000000';
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(8, -hh + 13, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
+            // 眼睛 - 根据表情变化
+            if (expr === 'wink') {
+                // 眨眼 - 左眼变成横线
+                ctx.fillStyle = '#FF0000';
+                ctx.beginPath();
+                ctx.arc(8, -hh + 13, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+                ctx.strokeStyle = '#FF0000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-12, -hh + 13);
+                ctx.lineTo(-4, -hh + 13);
+                ctx.stroke();
+            } else if (expr === 'laugh' || expr === 'taunt') {
+                // 大笑 - 眼睛变成 ^_^ 形状
+                ctx.strokeStyle = '#FF0000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-12, -hh + 15);
+                ctx.lineTo(-8, -hh + 10);
+                ctx.lineTo(-4, -hh + 15);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(4, -hh + 15);
+                ctx.lineTo(8, -hh + 10);
+                ctx.lineTo(12, -hh + 15);
+                ctx.stroke();
+            } else if (expr === 'scared') {
+                // 害怕 - 眼睛变成 ! !
+                ctx.fillStyle = '#FFFF00';
+                ctx.beginPath();
+                ctx.arc(-8, -hh + 13, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(8, -hh + 13, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                // 感叹号瞳孔
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.ellipse(-8, -hh + 12, 2, 4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(8, -hh + 12, 2, 4, 0, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 正常红色眼睛
+                ctx.fillStyle = '#FF0000';
+                ctx.beginPath();
+                ctx.arc(-8, -hh + 13, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(8, -hh + 13, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
 
             // 胸部面板 (简单矩形)
             ctx.fillStyle = '#455A64';
             ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.rect(-12, 0, 24, 18);
             ctx.fill();
             ctx.stroke();
 
-            // 按钮 (简单圆形)
-            ctx.fillStyle = '#4CAF50';
+            // 按钮 - 根据表情闪烁
+            if (expr === 'laugh' || expr === 'taunt') {
+                ctx.fillStyle = '#FFFF00'; // 黄色闪烁
+            } else {
+                ctx.fillStyle = '#4CAF50';
+            }
             ctx.beginPath();
             ctx.arc(-5, 9, 3, 0, Math.PI * 2);
             ctx.fill();
@@ -5485,9 +5762,76 @@
         }
 
         // ========================================
+        // ========================================
+        // 敌人嘲笑表情系统 - 像愤怒的小鸟
+        // ========================================
+        function updateVillainExpressions() {
+            const now = frameCount;
+
+            villains.forEach(v => {
+                if (!v.alive) return;
+
+                // 检查是否有弹射物靠近 - 显示害怕表情
+                let isScared = false;
+                if (projectile && projectile.active) {
+                    const dist = Math.hypot(projectile.x - v.x, projectile.y - v.y);
+                    if (dist < 200 && projectile.vx > 0) {
+                        isScared = true;
+                        v.expression = 'scared';
+                        v.expressionTimer = 30;
+                    }
+                }
+                projectiles.forEach(p => {
+                    if (p.active) {
+                        const dist = Math.hypot(p.x - v.x, p.y - v.y);
+                        if (dist < 200) {
+                            isScared = true;
+                            v.expression = 'scared';
+                            v.expressionTimer = 30;
+                        }
+                    }
+                });
+
+                // 如果没有害怕，正常更新表情
+                if (!isScared) {
+                    v.expressionTimer--;
+
+                    if (v.expressionTimer <= 0) {
+                        // 随机选择新表情
+                        const expressions = ['normal', 'normal', 'normal', 'laugh', 'taunt', 'wink'];
+                        const newExpression = expressions[Math.floor(Math.random() * expressions.length)];
+
+                        // 如果是嘲笑表情，可能播放音效
+                        if (newExpression !== 'normal' && newExpression !== v.expression) {
+                            // 每隔一段时间才播放音效，避免太吵
+                            if (now - v.lastTauntTime > 180) {
+                                // 30%概率播放音效
+                                if (Math.random() < 0.3) {
+                                    playVillainTauntSound();
+                                    v.lastTauntTime = now;
+                                }
+                            }
+                        }
+
+                        v.expression = newExpression;
+
+                        // 设置表情持续时间
+                        if (newExpression === 'normal') {
+                            v.expressionTimer = 60 + Math.random() * 120; // 正常表情持续1-3秒
+                        } else {
+                            v.expressionTimer = 20 + Math.random() * 40; // 特殊表情持续0.3-1秒
+                        }
+                    }
+                }
+            });
+        }
+
         // 物理更新
         // ========================================
         function update() {
+            // 更新敌人表情（嘲笑系统）
+            updateVillainExpressions();
+
             if (gameState === 'flying' || gameState === 'waiting') {
                 if (projectile && projectile.active) updateProjectile(projectile);
                 projectiles.forEach(p => updateProjectile(p));
