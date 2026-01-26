@@ -1796,8 +1796,7 @@
         let currentScene = 'city';
 
         const levels = [
-            // ===== 第一阶段：新手教学（1-4关）=====
-            // 第1关 - 入门：单敌，简单结构
+            // 第1关 - 新手入门（减少好运箱）
             {
                 scene: 'city',
                 buddies: ['dogman', 'dogman'],
@@ -1806,450 +1805,801 @@
                     { type: 'glass', x: 810, y: GROUND_Y - 25, w: 80, h: 25 },
                     { type: 'glass', x: 820, y: GROUND_Y - 50, w: 60, h: 20 }
                 ],
-                stars: [1, 1, 1]
+                stars: [1, 2, 2]
             },
-            // 第2关 - 双敌：学会瞄准不同目标
+            // 第2关 - 简单双敌（移除好运箱）
             {
                 scene: 'city',
-                buddies: ['dogman', 'dogman'],
+                buddies: ['dogman', 'dogman', 'lilpetey'],
                 villains: [
-                    { type: 'petey', x: 750, y: GROUND_Y - 58 },
-                    { type: 'petey', x: 950, y: GROUND_Y - 55 }
+                    { type: 'petey', x: 820, y: GROUND_Y - 58 },
+                    { type: 'flatpetey', x: 950, y: GROUND_Y - 55 }
                 ],
                 blocks: [
-                    { type: 'glass', x: 710, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'glass', x: 790, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 780, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 860, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 80 }
                 ],
-                stars: [1, 2, 2]
+                stars: [1, 2, 3]
             },
-            // 第3关 - 三敌：需要精准
+            // 第3关 - 初遇石头（只保留1个好运箱）
             {
                 scene: 'policestation',
-                buddies: ['dogman', 'dogman', 'dogman'],
+                buddies: ['dogman', 'lilpetey', '80hd'],
                 villains: [
-                    { type: 'petey', x: 680, y: GROUND_Y - 58 },
-                    { type: 'petey', x: 850, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 1020, y: GROUND_Y - 55 }
+                    { type: 'petey', x: 800, y: GROUND_Y - 138 },
+                    { type: 'petey', x: 900, y: GROUND_Y - 55 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 640, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 810, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 890, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 980, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 1060, y: GROUND_Y - 25, w: 25, h: 80 }
+                    { type: 'wood', x: 760, y: GROUND_Y - 25, w: 25, h: 110 },
+                    { type: 'wood', x: 860, y: GROUND_Y - 25, w: 25, h: 110 },
+                    { type: 'glass', x: 750, y: GROUND_Y - 135, w: 145, h: 20 },
+                    { type: 'glass', x: 870, y: GROUND_Y - 25, w: 20, h: 60 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 20, h: 60 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 180, w: 35, h: 35 }
                 ],
-                stars: [2, 3, 3]
+                stars: [1, 2, 3]
             },
-            // 第4关 - 认识Li'l Petey（分裂技能）
+            // 第4关 - TNT初体验（减少箱子，添加Chief）
             {
                 scene: 'catjail',
-                buddies: ['lilpetey', 'dogman'],
+                buddies: ['dogman', 'chief', 'lilpetey'],
                 villains: [
-                    { type: 'petey', x: 700, y: GROUND_Y - 58 },
-                    { type: 'petey', x: 850, y: GROUND_Y - 55 },
-                    { type: 'flatpetey', x: 1000, y: GROUND_Y - 55 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 660, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 810, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 890, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 960, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 1040, y: GROUND_Y - 25, w: 25, h: 80 }
-                ],
-                stars: [2, 3, 3]
-            },
-            // ===== 第二阶段：技能学习（5-8关）=====
-            // 第5关 - 认识80-HD（重击）
-            {
-                scene: 'secretlab',
-                buddies: ['80hd', 'dogman'],
-                villains: [
-                    { type: 'petey', x: 750, y: GROUND_Y - 60 },
+                    { type: 'petey', x: 750, y: GROUND_Y - 58 },
                     { type: 'petey', x: 920, y: GROUND_Y - 55 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 970, y: GROUND_Y - 25, w: 30, h: 90 }
-                ],
-                stars: [1, 2, 2]
-            },
-            // 第6关 - 双层结构
-            {
-                scene: 'city',
-                buddies: ['lilpetey', '80hd', 'dogman'],
-                villains: [
-                    { type: 'petey', x: 800, y: GROUND_Y - 60 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 160 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 130 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 130 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 155, w: 145, h: 18 }
-                ],
-                stars: [1, 2, 2]
-            },
-            // 第7关 - 认识Chief（冲击波）
-            {
-                scene: 'policestation',
-                buddies: ['chief', 'dogman', 'lilpetey'],
-                villains: [
-                    { type: 'petey', x: 680, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 850, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 1020, y: GROUND_Y - 55 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 640, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 810, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 890, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 980, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 1060, y: GROUND_Y - 25, w: 25, h: 75 }
-                ],
-                stars: [2, 3, 3]
-            },
-            // 第8关 - 认识Flippy（加速）+ 高塔
-            {
-                scene: 'catjail',
-                buddies: ['flippy', 'chief', 'dogman'],
-                villains: [
-                    { type: 'petey', x: 800, y: GROUND_Y - 200 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 280 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 250 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 250 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 195, w: 145, h: 18 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 275, w: 145, h: 18 }
-                ],
-                stars: [1, 2, 2]
-            },
-            // ===== 第三阶段：难度提升（9-12关）=====
-            // 第9关 - 认识Sarah（回旋镖）
-            {
-                scene: 'secretlab',
-                buddies: ['sarah', 'flippy', '80hd'],
-                villains: [
-                    { type: 'petey', x: 750, y: GROUND_Y - 140 },
-                    { type: 'petey', x: 950, y: GROUND_Y - 140 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 140 }
-                ],
-                stars: [1, 2, 2]
-            },
-            // 第10关 - 四敌挑战（需要策略）
-            {
-                scene: 'city',
-                buddies: ['lilpetey', '80hd', 'chief'],
-                villains: [
-                    { type: 'petey', x: 650, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 135 },
-                    { type: 'petey', x: 950, y: GROUND_Y - 55 },
-                    { type: 'flatpetey', x: 800, y: GROUND_Y - 215 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 610, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 690, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 190 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 190 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 130, w: 145, h: 18 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 210, w: 145, h: 18 },
-                    { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 75 },
-                    { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 75 }
-                ],
-                stars: [3, 4, 4]
-            },
-            // 第11关 - 首次piggy（2血量敌人）
-            {
-                scene: 'policestation',
-                buddies: ['80hd', 'chief', 'flippy'],
-                villains: [
-                    { type: 'piggy', x: 800, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 650, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 950, y: GROUND_Y - 55 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 610, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 690, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 760, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 840, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 80 }
-                ],
-                stars: [2, 3, 3]
-            },
-            // 第12关 - 双piggy堡垒
-            {
-                scene: 'catjail',
-                buddies: ['80hd', 'sarah', 'lilpetey', 'chief'],
-                villains: [
-                    { type: 'piggy', x: 720, y: GROUND_Y - 60 },
-                    { type: 'piggy', x: 880, y: GROUND_Y - 55 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 680, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 760, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 840, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 920, y: GROUND_Y - 25, w: 25, h: 85 }
-                ],
-                stars: [1, 2, 2]
-            },
-            // ===== 第四阶段：高级挑战（13-16关）=====
-            // 第13关 - 多层塔（限制角色）
-            {
-                scene: 'secretlab',
-                buddies: ['lilpetey', '80hd', 'flippy'],
-                villains: [
-                    { type: 'petey', x: 800, y: GROUND_Y - 55 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 135 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 215 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 190 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 190 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 50, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 130, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 210, w: 145, h: 15 }
-                ],
-                stars: [2, 3, 3]
-            },
-            // 第14关 - 分散敌人（4敌）
-            {
-                scene: 'city',
-                buddies: ['80hd', 'chief', 'lilpetey', 'flippy'],
-                villains: [
-                    { type: 'petey', x: 600, y: GROUND_Y - 58 },
-                    { type: 'piggy', x: 750, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 900, y: GROUND_Y - 58 },
-                    { type: 'piggy', x: 1050, y: GROUND_Y - 55 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 560, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 640, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'wood', x: 710, y: GROUND_Y - 25, w: 25, h: 80 },
                     { type: 'wood', x: 790, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 860, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 940, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 1010, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 1090, y: GROUND_Y - 25, w: 25, h: 80 }
+                    { type: 'glass', x: 880, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 960, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 110 },
+                    { type: 'greenbox', x: 835, y: GROUND_Y - 130, w: 35, h: 35 }
                 ],
-                stars: [3, 4, 4]
+                stars: [1, 2, 3]
             },
-            // 第15关 - 高塔（3piggy）
-            {
-                scene: 'policestation',
-                buddies: ['80hd', 'flippy', 'sarah', 'chief'],
-                villains: [
-                    { type: 'piggy', x: 800, y: GROUND_Y - 55 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 155 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 255 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 230 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 230 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 50, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 150, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 250, w: 145, h: 15 }
-                ],
-                stars: [2, 3, 3]
-            },
-            // 第16关 - 复杂结构（5敌）
-            {
-                scene: 'catjail',
-                buddies: ['80hd', 'chief', 'sarah', 'lilpetey'],
-                villains: [
-                    { type: 'piggy', x: 650, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 138 },
-                    { type: 'piggy', x: 950, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 650, y: GROUND_Y - 138 },
-                    { type: 'petey', x: 950, y: GROUND_Y - 138 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 600, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 850, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 135 },
-                    { type: 'wood', x: 590, y: GROUND_Y - 160, w: 145, h: 18 },
-                    { type: 'wood', x: 890, y: GROUND_Y - 160, w: 145, h: 18 }
-                ],
-                stars: [4, 5, 5]
-            },
-            // ===== 第五阶段：专家挑战（17-20关）=====
-            // 第17关 - 首次robot（2血量+装甲）
+            // 第5关 - 双层结构（平衡调整，添加Sarah）
             {
                 scene: 'secretlab',
-                buddies: ['80hd', 'chief', 'lilpetey'],
+                buddies: ['80hd', 'sarah', 'dogman', 'lilpetey'],
                 villains: [
-                    { type: 'robot', x: 750, y: GROUND_Y - 60 },
-                    { type: 'petey', x: 920, y: GROUND_Y - 58 }
+                    { type: 'petey', x: 680, y: GROUND_Y - 60 },
+                    { type: 'petey', x: 820, y: GROUND_Y - 183 },
+                    { type: 'petey', x: 960, y: GROUND_Y - 55 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 880, y: GROUND_Y - 25, w: 30, h: 90 },
-                    { type: 'wood', x: 960, y: GROUND_Y - 25, w: 30, h: 90 }
+                    { type: 'wood', x: 640, y: GROUND_Y - 25, w: 25, h: 90 },
+                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 90 },
+                    { type: 'glass', x: 780, y: GROUND_Y - 25, w: 25, h: 155 },
+                    { type: 'glass', x: 880, y: GROUND_Y - 25, w: 25, h: 155 },
+                    { type: 'glass', x: 770, y: GROUND_Y - 180, w: 145, h: 18 },
+                    { type: 'wood', x: 920, y: GROUND_Y - 25, w: 25, h: 90 },
+                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 90 },
+                    { type: 'tnt', x: 680, y: GROUND_Y - 120 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveX: 50 }
                 ],
-                stars: [1, 2, 2]
+                stars: [2, 3, 4]
             },
-            // 第18关 - robot双塔
+            // 第6关 - 三敌挑战（使用新角色）
             {
                 scene: 'city',
-                buddies: ['80hd', '80hd', 'chief', 'flippy'],
+                buddies: ['chief', 'flippy', 'sarah', '80hd'],
                 villains: [
-                    { type: 'robot', x: 680, y: GROUND_Y - 140 },
-                    { type: 'robot', x: 920, y: GROUND_Y - 140 }
+                    { type: 'petey', x: 650, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 820, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 990, y: GROUND_Y - 55 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 630, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 730, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 970, y: GROUND_Y - 25, w: 25, h: 140 },
-                    { type: 'wood', x: 620, y: GROUND_Y - 165, w: 145, h: 18 },
-                    { type: 'wood', x: 860, y: GROUND_Y - 165, w: 145, h: 18 }
+                    { type: 'glass', x: 610, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'wood', x: 780, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'wood', x: 860, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'wood', x: 950, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'wood', x: 1030, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'greenbox', x: 820, y: GROUND_Y - 120, w: 35, h: 35 }
                 ],
-                stars: [1, 2, 2]
+                stars: [2, 3, 4]
             },
-            // 第19关 - robot+piggy混合
+            // 第7关 - 高塔攻略（减少箱子）
             {
                 scene: 'policestation',
-                buddies: ['80hd', 'chief', 'sarah', 'lilpetey'],
+                buddies: ['lilpetey', 'chief', '80hd', 'dogman'],
                 villains: [
-                    { type: 'robot', x: 700, y: GROUND_Y - 60 },
-                    { type: 'piggy', x: 850, y: GROUND_Y - 55 },
-                    { type: 'robot', x: 1000, y: GROUND_Y - 60 }
+                    { type: 'petey', x: 720, y: GROUND_Y - 220 },
+                    { type: 'petey', x: 840, y: GROUND_Y - 220 },
+                    { type: 'petey', x: 960, y: GROUND_Y - 220 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 660, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 810, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 890, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 960, y: GROUND_Y - 25, w: 25, h: 85 },
-                    { type: 'wood', x: 1040, y: GROUND_Y - 25, w: 25, h: 85 }
+                    { type: 'wood', x: 670, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'wood', x: 770, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'wood', x: 970, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'glass', x: 660, y: GROUND_Y - 220, w: 340, h: 20 },
+                    { type: 'tnt', x: 720, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 920, y: GROUND_Y - 80 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 }
                 ],
-                stars: [2, 3, 3]
+                stars: [2, 3, 4]
             },
-            // 第20关 - 终极双塔
+            // 第8关 - 双层防御（添加新角色）
             {
                 scene: 'catjail',
-                buddies: ['80hd', 'flippy', 'sarah', 'chief'],
+                buddies: ['80hd', 'sarah', 'flippy', 'chief'],
                 villains: [
-                    { type: 'piggy', x: 680, y: GROUND_Y - 165 },
-                    { type: 'robot', x: 920, y: GROUND_Y - 165 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 55 }
+                    { type: 'flatpetey', x: 780, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 900, y: GROUND_Y - 138 },
+                    { type: 'petey', x: 780, y: GROUND_Y - 218 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 630, y: GROUND_Y - 25, w: 25, h: 165 },
-                    { type: 'wood', x: 730, y: GROUND_Y - 25, w: 25, h: 165 },
-                    { type: 'wood', x: 760, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 840, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 165 },
-                    { type: 'wood', x: 970, y: GROUND_Y - 25, w: 25, h: 165 },
-                    { type: 'wood', x: 620, y: GROUND_Y - 190, w: 145, h: 18 },
-                    { type: 'wood', x: 860, y: GROUND_Y - 190, w: 145, h: 18 }
+                    { type: 'wood', x: 730, y: GROUND_Y - 25, w: 25, h: 190 },
+                    { type: 'wood', x: 850, y: GROUND_Y - 25, w: 25, h: 190 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 55, w: 140, h: 18 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 135, w: 140, h: 18 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 215, w: 140, h: 18 },
+                    { type: 'glass', x: 885, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'glass', x: 955, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'wood', x: 875, y: GROUND_Y - 160, w: 110, h: 18 },
+                    { type: 'greenbox', x: 660, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1020, y: GROUND_Y - 50, w: 35, h: 35, moveY: 35 },
+                    { type: 'greenbox', x: 780, y: GROUND_Y - 260, w: 35, h: 35 },
+                    { type: 'redbox', x: 920, y: GROUND_Y - 200, w: 35, h: 35, moveX: 30 }
                 ],
-                stars: [2, 3, 3]
+                stars: [2, 3, 4]
             },
-            // ===== 第六阶段：大师挑战（21-24关）=====
-            // 第21关 - 4敌人防御
+            // 第9关 - 四敌围攻
             {
                 scene: 'secretlab',
-                buddies: ['chief', '80hd', 'lilpetey', 'flippy'],
+                buddies: ['dogman', 'lilpetey', 'flippy', '80hd', 'dogman'],
                 villains: [
-                    { type: 'piggy', x: 650, y: GROUND_Y - 58 },
-                    { type: 'robot', x: 800, y: GROUND_Y - 140 },
-                    { type: 'piggy', x: 950, y: GROUND_Y - 58 },
-                    { type: 'petey', x: 800, y: GROUND_Y - 220 }
+                    { type: 'petey', x: 620, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 135 },
+                    { type: 'petey', x: 980, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 295 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 610, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 690, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 195 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 195 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 135, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 215, w: 145, h: 15 },
-                    { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 80 },
-                    { type: 'wood', x: 990, y: GROUND_Y - 25, w: 25, h: 80 }
+                    { type: 'glass', x: 580, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'glass', x: 660, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 190 },
+                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 190 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 215, w: 145, h: 18 },
+                    { type: 'glass', x: 750, y: GROUND_Y - 235, w: 25, h: 85 },
+                    { type: 'glass', x: 870, y: GROUND_Y - 235, w: 25, h: 85 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 320, w: 145, h: 18 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'glass', x: 1020, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'tnt', x: 800, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 520, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1080, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 370, w: 35, h: 35, moveX: 30 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveY: 40 }
                 ],
-                stars: [3, 4, 4]
+                stars: [2, 4, 5]
+            },
+            // 第10关 - 双塔对决
+            {
+                scene: 'city',
+                buddies: ['flippy', 'flippy', 'lilpetey', '80hd', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 670, y: GROUND_Y - 135 },
+                    { type: 'piggy', x: 840, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 1010, y: GROUND_Y - 135 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 620, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'glass', x: 610, y: GROUND_Y - 160, w: 140, h: 18 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'wood', x: 880, y: GROUND_Y - 25, w: 25, h: 85 },
+                    { type: 'glass', x: 960, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'glass', x: 1060, y: GROUND_Y - 25, w: 20, h: 135 },
+                    { type: 'glass', x: 950, y: GROUND_Y - 160, w: 140, h: 18 },
+                    { type: 'tnt', x: 670, y: GROUND_Y - 50 },
+                    { type: 'tnt', x: 1010, y: GROUND_Y - 50 },
+                    { type: 'greenbox', x: 550, y: GROUND_Y - 50, w: 35, h: 35, moveY: 25 },
+                    { type: 'greenbox', x: 1120, y: GROUND_Y - 50, w: 35, h: 35, moveY: 25 },
+                    { type: 'greenbox', x: 840, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveX: 35 },
+                    { type: 'redbox', x: 750, y: GROUND_Y - 200, w: 35, h: 35, moveX: 40 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第11关 - 坚固堡垒
+            {
+                scene: 'policestation',
+                buddies: ['80hd', 'dogman', 'lilpetey', 'flippy', 'dogman'],
+                villains: [
+                    { type: 'piggy', x: 720, y: GROUND_Y - 60 },
+                    { type: 'piggy', x: 840, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 780, y: GROUND_Y - 208 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 670, y: GROUND_Y - 25, w: 25, h: 180 },
+                    { type: 'wood', x: 890, y: GROUND_Y - 25, w: 25, h: 180 },
+                    { type: 'glass', x: 700, y: GROUND_Y - 25, w: 185, h: 25 },
+                    { type: 'glass', x: 660, y: GROUND_Y - 205, w: 265, h: 22 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 960, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 780, y: GROUND_Y - 260, w: 35, h: 35, moveX: 35 },
+                    { type: 'greenbox', x: 780, y: GROUND_Y - 130, w: 35, h: 35, moveY: 20 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第12关 - 多层塔楼
+            {
+                scene: 'catjail',
+                buddies: ['lilpetey', '80hd', 'flippy', 'dogman', 'lilpetey'],
+                villains: [
+                    { type: 'petey', x: 620, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 800, y: GROUND_Y - 135 },
+                    { type: 'petey', x: 980, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 800, y: GROUND_Y - 265 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 580, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'glass', x: 660, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'wood', x: 740, y: GROUND_Y - 25, w: 25, h: 135 },
+                    { type: 'wood', x: 880, y: GROUND_Y - 25, w: 25, h: 135 },
+                    { type: 'glass', x: 730, y: GROUND_Y - 160, w: 185, h: 18 },
+                    { type: 'wood', x: 740, y: GROUND_Y - 180, w: 25, h: 105 },
+                    { type: 'wood', x: 880, y: GROUND_Y - 180, w: 25, h: 105 },
+                    { type: 'glass', x: 730, y: GROUND_Y - 285, w: 185, h: 18 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'glass', x: 1020, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'tnt', x: 800, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 520, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1080, y: GROUND_Y - 50, w: 35, h: 35, moveY: 30 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 330, w: 35, h: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveX: 45 },
+                    { type: 'redbox', x: 800, y: GROUND_Y - 200, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第13关 - 石头要塞
+            {
+                scene: 'secretlab',
+                buddies: ['80hd', '80hd', 'flippy', 'lilpetey', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 670, y: GROUND_Y - 58 },
+                    { type: 'flatpetey', x: 840, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 1010, y: GROUND_Y - 60 },
+                    { type: 'petey', x: 840, y: GROUND_Y - 228 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 620, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'wood', x: 790, y: GROUND_Y - 25, w: 25, h: 200 },
+                    { type: 'wood', x: 910, y: GROUND_Y - 25, w: 25, h: 200 },
+                    { type: 'glass', x: 780, y: GROUND_Y - 225, w: 145, h: 18 },
+                    { type: 'wood', x: 960, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'wood', x: 1060, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'tnt', x: 670, y: GROUND_Y - 130 },
+                    { type: 'tnt', x: 1010, y: GROUND_Y - 130 },
+                    { type: 'greenbox', x: 560, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1120, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 840, y: GROUND_Y - 280, w: 35, h: 35, moveX: 40 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveY: 40 },
+                    { type: 'redbox', x: 840, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第14关 - 超高塔
+            {
+                scene: 'city',
+                buddies: ['flippy', 'lilpetey', '80hd', 'dogman', 'flippy', 'dogman'],
+                villains: [
+                    { type: 'piggy', x: 620, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 135 },
+                    { type: 'piggy', x: 980, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 285 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 570, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'wood', x: 670, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 25, w: 20, h: 185 },
+                    { type: 'glass', x: 880, y: GROUND_Y - 25, w: 20, h: 185 },
+                    { type: 'wood', x: 730, y: GROUND_Y - 210, w: 180, h: 18 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 230, w: 25, h: 105 },
+                    { type: 'glass', x: 880, y: GROUND_Y - 230, w: 25, h: 105 },
+                    { type: 'wood', x: 730, y: GROUND_Y - 335, w: 180, h: 18 },
+                    { type: 'wood', x: 930, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'wood', x: 1030, y: GROUND_Y - 25, w: 25, h: 105 },
+                    { type: 'tnt', x: 800, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 800, y: GROUND_Y - 250 },
+                    { type: 'greenbox', x: 500, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1100, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 385, w: 35, h: 35, moveX: 30 },
+                    { type: 'greenbox', x: 620, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveY: 50 },
+                    { type: 'redbox', x: 980, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [3, 5, 6]
+            },
+            // 第15关 - 复杂堡垒
+            {
+                scene: 'secretlab',
+                buddies: ['80hd', 'flippy', 'lilpetey', 'dogman', '80hd', 'flippy'],
+                villains: [
+                    { type: 'piggy', x: 620, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 740, y: GROUND_Y - 138 },
+                    { type: 'flatpetey', x: 860, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 980, y: GROUND_Y - 138 },
+                    { type: 'petey', x: 810, y: GROUND_Y - 288 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 580, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'glass', x: 660, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 185 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 185 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 210, w: 145, h: 18 },
+                    { type: 'glass', x: 820, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'glass', x: 900, y: GROUND_Y - 25, w: 20, h: 65 },
+                    { type: 'wood', x: 940, y: GROUND_Y - 25, w: 25, h: 185 },
+                    { type: 'wood', x: 1040, y: GROUND_Y - 25, w: 25, h: 185 },
+                    { type: 'glass', x: 930, y: GROUND_Y - 210, w: 145, h: 18 },
+                    { type: 'glass', x: 760, y: GROUND_Y - 230, w: 20, h: 105 },
+                    { type: 'glass', x: 880, y: GROUND_Y - 230, w: 20, h: 105 },
+                    { type: 'wood', x: 750, y: GROUND_Y - 335, w: 160, h: 18 },
+                    { type: 'tnt', x: 620, y: GROUND_Y - 100 },
+                    { type: 'tnt', x: 980, y: GROUND_Y - 100 },
+                    { type: 'tnt', x: 810, y: GROUND_Y - 250 },
+                    { type: 'greenbox', x: 520, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1100, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 810, y: GROUND_Y - 385, w: 35, h: 35, moveX: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveX: 50 },
+                    { type: 'redbox', x: 860, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [3, 5, 6]
+            },
+            // 第16关 - 运气大挑战
+            {
+                scene: 'city',
+                buddies: ['dogman', 'lilpetey', 'dogman', 'flippy', '80hd'],
+                villains: [
+                    { type: 'petey', x: 700, y: GROUND_Y - 58 },
+                    { type: 'petey', x: 850, y: GROUND_Y - 58 },
+                    { type: 'piggy', x: 1000, y: GROUND_Y - 55 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 660, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 810, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 890, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'wood', x: 960, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'wood', x: 1040, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 130, w: 35, h: 35, moveX: 40 },
+                    { type: 'greenbox', x: 1100, y: GROUND_Y - 50, w: 35, h: 35, moveY: 30 },
+                    { type: 'greenbox', x: 775, y: GROUND_Y - 200, w: 35, h: 35 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveX: 50 },
+                    { type: 'redbox', x: 700, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 3, 4]
+            },
+            // 第17关 - 机器人防线
+            {
+                scene: 'policestation',
+                buddies: ['80hd', 'dogman', 'lilpetey', 'flippy', '80hd'],
+                villains: [
+                    { type: 'robot', x: 750, y: GROUND_Y - 140 },
+                    { type: 'petey', x: 900, y: GROUND_Y - 58 },
+                    { type: 'robot', x: 650, y: GROUND_Y - 60 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 600, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 140, w: 145, h: 18 },
+                    { type: 'glass', x: 860, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'greenbox', x: 540, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1000, y: GROUND_Y - 50, w: 35, h: 35, moveY: 35 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 200, w: 35, h: 35, moveX: 30 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 180, w: 35, h: 35, moveY: 45 },
+                    { type: 'redbox', x: 650, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 3, 4]
+            },
+            // 第18关 - 金字塔
+            {
+                scene: 'catjail',
+                buddies: ['flippy', 'lilpetey', 'dogman', '80hd', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 800, y: GROUND_Y - 58 },
+                    { type: 'flatpetey', x: 800, y: GROUND_Y - 138 },
+                    { type: 'piggy', x: 800, y: GROUND_Y - 218 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 700, y: GROUND_Y - 25, w: 200, h: 20 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 45, w: 25, h: 90 },
+                    { type: 'glass', x: 880, y: GROUND_Y - 45, w: 25, h: 90 },
+                    { type: 'glass', x: 720, y: GROUND_Y - 135, w: 185, h: 18 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 155, w: 20, h: 80 },
+                    { type: 'glass', x: 860, y: GROUND_Y - 155, w: 20, h: 80 },
+                    { type: 'wood', x: 740, y: GROUND_Y - 235, w: 140, h: 18 },
+                    { type: 'greenbox', x: 640, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 950, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 290, w: 35, h: 35, moveX: 35 },
+                    { type: 'greenbox', x: 1020, y: GROUND_Y - 100, w: 35, h: 35, moveY: 40 },
+                    { type: 'redbox', x: 580, y: GROUND_Y - 150, w: 35, h: 35, moveX: 45 },
+                    { type: 'redbox', x: 800, y: GROUND_Y - 80, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第19关 - 机器人双塔
+            {
+                scene: 'secretlab',
+                buddies: ['dogman', 'dogman', '80hd', 'flippy', 'lilpetey'],
+                villains: [
+                    { type: 'robot', x: 650, y: GROUND_Y - 60 },
+                    { type: 'robot', x: 950, y: GROUND_Y - 60 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 188 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 600, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'glass', x: 750, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 870, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 190, w: 165, h: 18 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'tnt', x: 800, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 540, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1060, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 250, w: 35, h: 35, moveX: 40 },
+                    { type: 'greenbox', x: 650, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 180, w: 35, h: 35, moveY: 45 },
+                    { type: 'redbox', x: 950, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第20关 - 双塔对决
+            {
+                scene: 'city',
+                buddies: ['80hd', 'flippy', 'dogman', 'lilpetey', '80hd'],
+                villains: [
+                    { type: 'petey', x: 650, y: GROUND_Y - 188 },
+                    { type: 'piggy', x: 950, y: GROUND_Y - 188 },
+                    { type: 'flatpetey', x: 800, y: GROUND_Y - 55 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 600, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 590, y: GROUND_Y - 190, w: 145, h: 18 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 890, y: GROUND_Y - 190, w: 145, h: 18 },
+                    { type: 'glass', x: 760, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 840, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'greenbox', x: 540, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1060, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 650, y: GROUND_Y - 250, w: 35, h: 35, moveX: 30 },
+                    { type: 'greenbox', x: 950, y: GROUND_Y - 250, w: 35, h: 35, moveX: 30 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 },
+                    { type: 'redbox', x: 800, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第21关 - 三敌混战
+            {
+                scene: 'policestation',
+                buddies: ['lilpetey', 'lilpetey', '80hd', 'dogman', 'flippy'],
+                villains: [
+                    { type: 'petey', x: 700, y: GROUND_Y - 58 },
+                    { type: 'robot', x: 850, y: GROUND_Y - 138 },
+                    { type: 'petey', x: 1000, y: GROUND_Y - 58 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 660, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 740, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 790, y: GROUND_Y - 140, w: 145, h: 18 },
+                    { type: 'glass', x: 960, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 1040, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'tnt', x: 850, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1100, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 200, w: 35, h: 35, moveX: 35 },
+                    { type: 'greenbox', x: 700, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 500, y: GROUND_Y - 150, w: 35, h: 35, moveX: 40 },
+                    { type: 'redbox', x: 1000, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
             },
             // 第22关 - 四层要塞
             {
-                scene: 'city',
-                buddies: ['80hd', 'flippy', 'chief', 'sarah'],
+                scene: 'catjail',
+                buddies: ['80hd', 'flippy', 'dogman', 'lilpetey', '80hd', 'dogman'],
                 villains: [
                     { type: 'piggy', x: 800, y: GROUND_Y - 55 },
-                    { type: 'robot', x: 800, y: GROUND_Y - 135 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 215 },
-                    { type: 'robot', x: 800, y: GROUND_Y - 295 }
+                    { type: 'petey', x: 800, y: GROUND_Y - 138 },
+                    { type: 'robot', x: 800, y: GROUND_Y - 218 },
+                    { type: 'flatpetey', x: 800, y: GROUND_Y - 298 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 270 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 270 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 50, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 130, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 210, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 290, w: 145, h: 15 }
+                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 270 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 270 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 55, w: 155, h: 15 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 135, w: 155, h: 15 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 215, w: 155, h: 15 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 295, w: 155, h: 15 },
+                    { type: 'tnt', x: 780, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 850, y: GROUND_Y - 240 },
+                    { type: 'greenbox', x: 660, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 960, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 350, w: 35, h: 35, moveX: 40 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 160, w: 35, h: 35 },
+                    { type: 'redbox', x: 600, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 },
+                    { type: 'redbox', x: 850, y: GROUND_Y - 160, w: 35, h: 35 }
                 ],
-                stars: [3, 4, 4]
+                stars: [3, 5, 6]
             },
-            // 第23关 - 5敌分散布局
-            {
-                scene: 'policestation',
-                buddies: ['flippy', '80hd', 'chief', 'sarah'],
-                villains: [
-                    { type: 'robot', x: 600, y: GROUND_Y - 60 },
-                    { type: 'piggy', x: 750, y: GROUND_Y - 55 },
-                    { type: 'robot', x: 900, y: GROUND_Y - 60 },
-                    { type: 'piggy', x: 1050, y: GROUND_Y - 55 },
-                    { type: 'petey', x: 825, y: GROUND_Y - 200 }
-                ],
-                blocks: [
-                    { type: 'wood', x: 550, y: GROUND_Y - 25, w: 25, h: 90 },
-                    { type: 'wood', x: 650, y: GROUND_Y - 25, w: 25, h: 90 },
-                    { type: 'wood', x: 710, y: GROUND_Y - 25, w: 25, h: 90 },
-                    { type: 'wood', x: 790, y: GROUND_Y - 25, w: 25, h: 175 },
-                    { type: 'wood', x: 880, y: GROUND_Y - 25, w: 25, h: 175 },
-                    { type: 'wood', x: 780, y: GROUND_Y - 200, w: 110, h: 18 },
-                    { type: 'wood', x: 940, y: GROUND_Y - 25, w: 25, h: 90 },
-                    { type: 'wood', x: 1010, y: GROUND_Y - 25, w: 25, h: 90 },
-                    { type: 'wood', x: 1090, y: GROUND_Y - 25, w: 25, h: 90 }
-                ],
-                stars: [4, 5, 5]
-            },
-            // 第24关 - 终极挑战
+            // 第23关 - 分散防御
             {
                 scene: 'secretlab',
-                buddies: ['80hd', 'chief', 'sarah', 'flippy'],
+                buddies: ['flippy', '80hd', 'lilpetey', 'dogman', 'flippy', 'dogman'],
                 villains: [
-                    { type: 'robot', x: 650, y: GROUND_Y - 58 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 55 },
-                    { type: 'robot', x: 950, y: GROUND_Y - 58 },
-                    { type: 'piggy', x: 800, y: GROUND_Y - 175 },
-                    { type: 'robot', x: 800, y: GROUND_Y - 255 }
+                    { type: 'robot', x: 600, y: GROUND_Y - 60 },
+                    { type: 'petey', x: 750, y: GROUND_Y - 188 },
+                    { type: 'piggy', x: 900, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 1050, y: GROUND_Y - 58 }
                 ],
                 blocks: [
-                    { type: 'wood', x: 600, y: GROUND_Y - 25, w: 30, h: 85 },
-                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 30, h: 85 },
-                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 230 },
-                    { type: 'wood', x: 870, y: GROUND_Y - 25, w: 25, h: 230 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 50, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 170, w: 145, h: 15 },
-                    { type: 'wood', x: 740, y: GROUND_Y - 250, w: 145, h: 15 },
-                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 30, h: 85 },
-                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 30, h: 85 }
+                    { type: 'wood', x: 550, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 650, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'glass', x: 700, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 820, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 190, w: 165, h: 18 },
+                    { type: 'glass', x: 860, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 1010, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 1090, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'tnt', x: 760, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 490, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1150, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 250, w: 35, h: 35, moveX: 35 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 900, y: GROUND_Y - 130, w: 35, h: 35, moveY: 30 },
+                    { type: 'redbox', x: 460, y: GROUND_Y - 200, w: 35, h: 35, moveY: 45 }
                 ],
-                stars: [4, 5, 5]
+                stars: [3, 5, 6]
+            },
+            // 第24关 - 运气风暴
+            {
+                scene: 'city',
+                buddies: ['dogman', 'lilpetey', '80hd', 'flippy', 'dogman', 'lilpetey'],
+                villains: [
+                    { type: 'petey', x: 650, y: GROUND_Y - 58 },
+                    { type: 'flatpetey', x: 800, y: GROUND_Y - 55 },
+                    { type: 'petey', x: 950, y: GROUND_Y - 58 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 610, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 760, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 840, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 910, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 990, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'greenbox', x: 550, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1050, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 150, w: 35, h: 35, moveX: 50 },
+                    { type: 'greenbox', x: 650, y: GROUND_Y - 150, w: 35, h: 35, moveY: 35 },
+                    { type: 'greenbox', x: 950, y: GROUND_Y - 150, w: 35, h: 35, moveY: 35 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveX: 60 },
+                    { type: 'redbox', x: 720, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 880, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [2, 4, 5]
+            },
+            // 第25关 - 坚固堡垒
+            {
+                scene: 'policestation',
+                buddies: ['80hd', '80hd', 'flippy', 'lilpetey', 'dogman', 'flippy'],
+                villains: [
+                    { type: 'robot', x: 750, y: GROUND_Y - 60 },
+                    { type: 'robot', x: 950, y: GROUND_Y - 60 },
+                    { type: 'piggy', x: 850, y: GROUND_Y - 188 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 1000, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'glass', x: 790, y: GROUND_Y - 190, w: 145, h: 18 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 950, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 640, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1060, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 250, w: 35, h: 35, moveX: 40 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 950, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 580, y: GROUND_Y - 180, w: 35, h: 35, moveY: 50 },
+                    { type: 'redbox', x: 850, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [3, 5, 6]
+            },
+            // 第26关 - 阶梯防线
+            {
+                scene: 'catjail',
+                buddies: ['lilpetey', 'flippy', '80hd', 'dogman', 'lilpetey', '80hd'],
+                villains: [
+                    { type: 'petey', x: 600, y: GROUND_Y - 58 },
+                    { type: 'piggy', x: 750, y: GROUND_Y - 138 },
+                    { type: 'robot', x: 900, y: GROUND_Y - 218 },
+                    { type: 'petey', x: 1050, y: GROUND_Y - 58 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 560, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 640, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 700, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 800, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 690, y: GROUND_Y - 140, w: 145, h: 18 },
+                    { type: 'wood', x: 850, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'wood', x: 950, y: GROUND_Y - 25, w: 25, h: 195 },
+                    { type: 'glass', x: 840, y: GROUND_Y - 220, w: 145, h: 18 },
+                    { type: 'glass', x: 1010, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 1090, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 900, y: GROUND_Y - 160 },
+                    { type: 'greenbox', x: 500, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1150, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 900, y: GROUND_Y - 280, w: 35, h: 35, moveX: 45 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1050, y: GROUND_Y - 130, w: 35, h: 35, moveY: 35 },
+                    { type: 'redbox', x: 750, y: GROUND_Y - 200, w: 35, h: 35, moveX: 40 },
+                    { type: 'redbox', x: 875, y: GROUND_Y - 80, w: 35, h: 35 }
+                ],
+                stars: [3, 5, 6]
+            },
+            // 第27关 - 超级高塔
+            {
+                scene: 'secretlab',
+                buddies: ['flippy', '80hd', 'dogman', 'lilpetey', 'flippy', '80hd', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 800, y: GROUND_Y - 58 },
+                    { type: 'flatpetey', x: 800, y: GROUND_Y - 138 },
+                    { type: 'piggy', x: 800, y: GROUND_Y - 218 },
+                    { type: 'robot', x: 800, y: GROUND_Y - 298 },
+                    { type: 'petey', x: 800, y: GROUND_Y - 378 }
+                ],
+                blocks: [
+                    { type: 'wood', x: 720, y: GROUND_Y - 25, w: 25, h: 355 },
+                    { type: 'wood', x: 900, y: GROUND_Y - 25, w: 25, h: 355 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 55, w: 155, h: 12 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 135, w: 155, h: 12 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 215, w: 155, h: 12 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 295, w: 155, h: 12 },
+                    { type: 'glass', x: 745, y: GROUND_Y - 375, w: 155, h: 12 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 850, y: GROUND_Y - 160 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 240 },
+                    { type: 'greenbox', x: 650, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 960, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 800, y: GROUND_Y - 430, w: 35, h: 35, moveX: 50 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 320, w: 35, h: 35 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 320, w: 35, h: 35 },
+                    { type: 'redbox', x: 600, y: GROUND_Y - 200, w: 35, h: 35, moveY: 60 },
+                    { type: 'redbox', x: 800, y: GROUND_Y - 160, w: 35, h: 35 }
+                ],
+                stars: [4, 6, 7]
+            },
+            // 第28关 - 分散迷宫
+            {
+                scene: 'city',
+                buddies: ['80hd', 'lilpetey', 'flippy', 'dogman', '80hd', 'lilpetey', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 600, y: GROUND_Y - 58 },
+                    { type: 'robot', x: 750, y: GROUND_Y - 60 },
+                    { type: 'piggy', x: 900, y: GROUND_Y - 55 },
+                    { type: 'flatpetey', x: 1050, y: GROUND_Y - 55 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 560, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 640, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'wood', x: 700, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'wood', x: 800, y: GROUND_Y - 25, w: 25, h: 100 },
+                    { type: 'glass', x: 860, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 1010, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 1090, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'tnt', x: 750, y: GROUND_Y - 130 },
+                    { type: 'tnt', x: 900, y: GROUND_Y - 100 },
+                    { type: 'greenbox', x: 500, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1150, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 750, y: GROUND_Y - 200, w: 35, h: 35, moveX: 50 },
+                    { type: 'greenbox', x: 600, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1050, y: GROUND_Y - 130, w: 35, h: 35, moveY: 40 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 200, w: 35, h: 35, moveY: 55 },
+                    { type: 'redbox', x: 680, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 900, y: GROUND_Y - 180, w: 35, h: 35, moveX: 35 }
+                ],
+                stars: [3, 5, 7]
+            },
+            // 第29关 - 史诗决战
+            {
+                scene: 'policestation',
+                buddies: ['flippy', '80hd', 'lilpetey', 'dogman', 'flippy', '80hd', 'lilpetey', 'dogman'],
+                villains: [
+                    { type: 'petey', x: 550, y: GROUND_Y - 58 },
+                    { type: 'robot', x: 700, y: GROUND_Y - 138 },
+                    { type: 'piggy', x: 850, y: GROUND_Y - 55 },
+                    { type: 'robot', x: 1000, y: GROUND_Y - 138 },
+                    { type: 'petey', x: 850, y: GROUND_Y - 268 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 510, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 590, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'wood', x: 650, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 640, y: GROUND_Y - 140, w: 145, h: 18 },
+                    { type: 'glass', x: 800, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'glass', x: 900, y: GROUND_Y - 25, w: 25, h: 80 },
+                    { type: 'wood', x: 950, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'wood', x: 1050, y: GROUND_Y - 25, w: 25, h: 115 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 140, w: 145, h: 18 },
+                    { type: 'glass', x: 790, y: GROUND_Y - 160, w: 20, h: 110 },
+                    { type: 'glass', x: 930, y: GROUND_Y - 160, w: 20, h: 110 },
+                    { type: 'wood', x: 780, y: GROUND_Y - 270, w: 165, h: 18 },
+                    { type: 'tnt', x: 700, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 1000, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 850, y: GROUND_Y - 200 },
+                    { type: 'greenbox', x: 450, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1110, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 330, w: 35, h: 35, moveX: 50 },
+                    { type: 'greenbox', x: 550, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 700, y: GROUND_Y - 200, w: 35, h: 35, moveY: 30 },
+                    { type: 'greenbox', x: 1000, y: GROUND_Y - 200, w: 35, h: 35, moveY: 30 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 250, w: 35, h: 35, moveX: 60 },
+                    { type: 'redbox', x: 850, y: GROUND_Y - 130, w: 35, h: 35 }
+                ],
+                stars: [4, 6, 8]
+            },
+            // 第30关 - 终极挑战
+            {
+                scene: 'secretlab',
+                buddies: ['80hd', 'flippy', 'lilpetey', 'dogman', '80hd', 'flippy', 'lilpetey', 'dogman', 'flippy'],
+                villains: [
+                    { type: 'petey', x: 550, y: GROUND_Y - 58 },
+                    { type: 'piggy', x: 700, y: GROUND_Y - 188 },
+                    { type: 'robot', x: 850, y: GROUND_Y - 268 },
+                    { type: 'flatpetey', x: 850, y: GROUND_Y - 55 },
+                    { type: 'piggy', x: 1000, y: GROUND_Y - 188 },
+                    { type: 'petey', x: 1050, y: GROUND_Y - 58 }
+                ],
+                blocks: [
+                    { type: 'glass', x: 510, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 590, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'wood', x: 650, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 750, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 640, y: GROUND_Y - 190, w: 145, h: 18 },
+                    { type: 'glass', x: 800, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'glass', x: 900, y: GROUND_Y - 25, w: 20, h: 70 },
+                    { type: 'wood', x: 950, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'wood', x: 1050, y: GROUND_Y - 25, w: 25, h: 165 },
+                    { type: 'glass', x: 940, y: GROUND_Y - 190, w: 145, h: 18 },
+                    { type: 'glass', x: 790, y: GROUND_Y - 160, w: 20, h: 110 },
+                    { type: 'glass', x: 930, y: GROUND_Y - 160, w: 20, h: 110 },
+                    { type: 'wood', x: 780, y: GROUND_Y - 270, w: 165, h: 18 },
+                    { type: 'glass', x: 1010, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'glass', x: 1090, y: GROUND_Y - 25, w: 20, h: 80 },
+                    { type: 'tnt', x: 700, y: GROUND_Y - 80 },
+                    { type: 'tnt', x: 850, y: GROUND_Y - 100 },
+                    { type: 'tnt', x: 1000, y: GROUND_Y - 80 },
+                    { type: 'greenbox', x: 450, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 1150, y: GROUND_Y - 50, w: 35, h: 35 },
+                    { type: 'greenbox', x: 850, y: GROUND_Y - 330, w: 35, h: 35, moveX: 60 },
+                    { type: 'greenbox', x: 550, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'greenbox', x: 700, y: GROUND_Y - 250, w: 35, h: 35, moveY: 40 },
+                    { type: 'greenbox', x: 1000, y: GROUND_Y - 250, w: 35, h: 35, moveY: 40 },
+                    { type: 'redbox', x: 480, y: GROUND_Y - 280, w: 35, h: 35, moveX: 70 },
+                    { type: 'redbox', x: 700, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 1000, y: GROUND_Y - 130, w: 35, h: 35 },
+                    { type: 'redbox', x: 850, y: GROUND_Y - 200, w: 35, h: 35 }
+                ],
+                stars: [5, 7, 9]
             }
         ];
 
@@ -4906,85 +5256,31 @@
         }
 
         function drawTrajectory() {
-            // 愤怒的小鸟风格参考线 - 只显示大致方向，不精确
             const power = Math.min(getDistance(projectile, { x: SLINGSHOT_X, y: SLINGSHOT_Y }), MAX_PULL_DISTANCE);
             const angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
+            const vx = Math.cos(angle) * power * LAUNCH_POWER_MULTIPLIER;
+            const vy = Math.sin(angle) * power * LAUNCH_POWER_MULTIPLIER;
 
-            // 力量百分比（用于显示拉力强度）
-            const powerPercent = power / MAX_PULL_DISTANCE;
+            let px = SLINGSHOT_X, py = SLINGSHOT_Y;
+            let pvx = vx, pvy = vy;
 
-            // 简化的参考方向 - 不是精确弹道
-            const baseSpeed = power * 0.18; // 稍微偏差的速度系数
-            const dirX = Math.cos(angle);
-            const dirY = Math.sin(angle);
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            for (let i = 0; i < 40; i++) {
+                pvx *= AIR_RESISTANCE;
+                pvy += GRAVITY * (projectile.mass || 1);
+                pvy *= AIR_RESISTANCE;
+                px += pvx;
+                py += pvy;
 
-            // 根据拉力决定显示多少个点（3-8个）
-            const dotCount = Math.floor(3 + powerPercent * 5);
+                if (py > GROUND_Y) break;
 
-            // 点的间距随拉力增加
-            const spacing = 25 + powerPercent * 15;
-
-            // 绘制参考点 - 明亮的橙黄色渐变
-            for (let i = 1; i <= dotCount; i++) {
-                // 简单的抛物线参考（不精确模拟物理）
-                const t = i * spacing / baseSpeed;
-                const px = SLINGSHOT_X + dirX * baseSpeed * t * 0.8;
-                const py = SLINGSHOT_Y + dirY * baseSpeed * t * 0.8 + 0.15 * t * t * 50;
-
-                // 超出画面就停止
-                if (py > GROUND_Y - 20 || px > canvas.width - 50 || px < 50) break;
-
-                // 渐变透明度
-                const alpha = 0.9 - (i / dotCount) * 0.5;
-
-                // 点的大小逐渐变小
-                const dotSize = 6 - i * 0.4;
-
-                // 绘制外圈光晕
+                const alpha = 1 - i / 40;
+                ctx.globalAlpha = alpha * 0.6;
                 ctx.beginPath();
-                const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, dotSize + 4);
-                glowGrad.addColorStop(0, `rgba(255, 200, 0, ${alpha * 0.6})`);
-                glowGrad.addColorStop(1, 'rgba(255, 150, 0, 0)');
-                ctx.fillStyle = glowGrad;
-                ctx.arc(px, py, dotSize + 4, 0, Math.PI * 2);
-                ctx.fill();
-
-                // 绘制实心点 - 亮橙色
-                ctx.beginPath();
-                ctx.fillStyle = `rgba(255, 180, 0, ${alpha})`;
-                ctx.arc(px, py, dotSize, 0, Math.PI * 2);
-                ctx.fill();
-
-                // 高亮中心
-                ctx.beginPath();
-                ctx.fillStyle = `rgba(255, 255, 200, ${alpha * 0.8})`;
-                ctx.arc(px, py, dotSize * 0.4, 0, Math.PI * 2);
+                ctx.arc(px, py, 4 - i * 0.08, 0, Math.PI * 2);
                 ctx.fill();
             }
-
-            // 在弹弓旁边显示力量条
-            const barX = SLINGSHOT_X - 60;
-            const barY = SLINGSHOT_Y - 80;
-            const barHeight = 60;
-            const barWidth = 8;
-
-            // 力量条背景
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
-
-            // 力量条边框
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
-
-            // 力量条填充 - 从绿到红渐变
-            const fillHeight = barHeight * powerPercent;
-            const powerGrad = ctx.createLinearGradient(0, barY + barHeight, 0, barY);
-            powerGrad.addColorStop(0, '#4CAF50');
-            powerGrad.addColorStop(0.5, '#FFC107');
-            powerGrad.addColorStop(1, '#F44336');
-            ctx.fillStyle = powerGrad;
-            ctx.fillRect(barX, barY + barHeight - fillHeight, barWidth, fillHeight);
+            ctx.globalAlpha = 1;
         }
 
         // ========================================
@@ -5650,64 +5946,28 @@
                     break;
 
                 case 'enemyHeal':
-                    // 敌人复活！让已经死掉的敌人重新站起来！
-                    const deadVillains = villains.filter(v => !v.alive);
-                    if (deadVillains.length > 0) {
-                        // 随机复活1-2个死掉的敌人
-                        const reviveCount = Math.min(deadVillains.length, 1 + Math.floor(Math.random() * 2));
-                        const toRevive = deadVillains.sort(() => Math.random() - 0.5).slice(0, reviveCount);
-
-                        toRevive.forEach((v, idx) => {
-                            setTimeout(() => {
-                                v.alive = true;
-                                v.health = v.maxHealth; // 满血复活！
-
-                                // 复活时的紫色闪电效果
-                                for (let i = 0; i < 30; i++) {
-                                    const angle = (i / 30) * Math.PI * 2;
-                                    particles.push({
-                                        x: v.x + v.width/2, y: v.y + v.height/2,
-                                        vx: Math.cos(angle) * (5 + Math.random() * 5),
-                                        vy: Math.sin(angle) * (5 + Math.random() * 5),
-                                        size: 6 + Math.random() * 8,
-                                        color: ['#9400D3', '#8B008B', '#FF00FF', '#BA55D3'][Math.floor(Math.random() * 4)],
-                                        alpha: 1
-                                    });
-                                }
-
-                                // 复活冲击波
-                                window.shockwaves.push({
+                    // 敌人回血 + 明显治愈效果
+                    villains.forEach(v => {
+                        if (v.alive) {
+                            v.health = v.maxHealth; // 完全恢复！
+                            // 大量治愈粒子
+                            for (let i = 0; i < 20; i++) {
+                                particles.push({
                                     x: v.x + v.width/2, y: v.y + v.height/2,
-                                    radius: 5, maxRadius: 80,
-                                    color: 'rgba(148, 0, 211, 0.6)', lineWidth: 5
+                                    vx: (Math.random() - 0.5) * 8,
+                                    vy: -Math.random() * 6 - 2,
+                                    size: 5 + Math.random() * 6,
+                                    color: '#FF69B4', alpha: 1
                                 });
-
-                                // 显示复活文字
-                                showBigText('👻 敌人复活！', '#9400D3', 60);
-
-                                // 播放复活音效
-                                playSimpleSound(200, 0.3, 'sawtooth');
-                                setTimeout(() => playSimpleSound(300, 0.2, 'sawtooth'), 100);
-                                setTimeout(() => playSimpleSound(400, 0.15, 'sawtooth'), 200);
-                            }, idx * 300);
-                        });
-                    } else {
-                        // 没有死掉的敌人可复活，改为给活着的敌人回满血
-                        villains.forEach(v => {
-                            if (v.alive && v.health < v.maxHealth) {
-                                v.health = v.maxHealth;
-                                for (let i = 0; i < 15; i++) {
-                                    particles.push({
-                                        x: v.x + v.width/2, y: v.y + v.height/2,
-                                        vx: (Math.random() - 0.5) * 6,
-                                        vy: -Math.random() * 5 - 2,
-                                        size: 4 + Math.random() * 5,
-                                        color: '#FF69B4', alpha: 1
-                                    });
-                                }
                             }
-                        });
-                    }
+                            // 治愈冲击波
+                            window.shockwaves.push({
+                                x: v.x + v.width/2, y: v.y + v.height/2,
+                                radius: 5, maxRadius: 60,
+                                color: 'rgba(255, 105, 180, 0.4)', lineWidth: 4
+                            });
+                        }
+                    });
                     break;
 
                 case 'losePoints':
@@ -5958,7 +6218,7 @@
             const names = {
                 'meteor': '☄️ 陨石来袭!',
                 'multiMeteor': '☄️☄️ 流星雨!',
-                'enemyHeal': '👻 敌人复活!',
+                'enemyHeal': '💗 敌人回血!',
                 'losePoints': '💔 扣分!',
                 'starfall': '⭐ 幸运星!',
                 'multiStar': '🌟 星星雨!',
