@@ -881,6 +881,18 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
+.site-credits {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.site-credits strong {
+    color: #FFD700;
+    font-family: 'Bangers', cursive;
+    letter-spacing: 1px;
+}
+
 /* ========================================
    响应式设计
    ======================================== */
