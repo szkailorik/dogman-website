@@ -6022,7 +6022,7 @@
             const buddyType = buddyTypes[projectile.type];
             const accuracy = buddyType?.accuracy || 0.8;
 
-            // 精准角色：预览时也显示辅助后的轨迹
+            // 精准角色：预览时也显示辅助后的轨迹（轻微辅助）
             if (accuracy >= 0.9) {
                 const targetVillain = findNearestVillainInDirection(angle);
                 if (targetVillain) {
@@ -6030,8 +6030,17 @@
                         targetVillain.y + targetVillain.height/2 - SLINGSHOT_Y,
                         targetVillain.x + targetVillain.width/2 - SLINGSHOT_X
                     );
-                    const aimAssist = accuracy * 0.3;
-                    angle = angle * (1 - aimAssist) + targetAngle * aimAssist;
+
+                    // 计算角度差
+                    let angleDiff = targetAngle - angle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+                    // 只有角度差小于25度时才辅助
+                    if (Math.abs(angleDiff) < Math.PI / 7) {
+                        const aimAssist = accuracy * 0.2;
+                        angle = angle + angleDiff * aimAssist;
+                    }
                 }
             }
 
@@ -8047,7 +8056,7 @@
             const buddyType = buddyTypes[projectile.type];
             const accuracy = buddyType?.accuracy || 0.8;
 
-            // 精准角色：自动微调角度瞄准最近的敌人
+            // 精准角色：自动微调角度瞄准最近的敌人（轻微辅助）
             if (accuracy >= 0.9) {
                 const targetVillain = findNearestVillainInDirection(angle);
                 if (targetVillain) {
@@ -8055,9 +8064,17 @@
                         targetVillain.y + targetVillain.height/2 - SLINGSHOT_Y,
                         targetVillain.x + targetVillain.width/2 - SLINGSHOT_X
                     );
-                    // 根据精准度混合原角度和目标角度
-                    const aimAssist = accuracy * 0.3; // 最多30%角度修正
-                    angle = angle * (1 - aimAssist) + targetAngle * aimAssist;
+
+                    // 计算角度差
+                    let angleDiff = targetAngle - angle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+                    // 只有角度差小于25度时才辅助，避免大幅改变玩家意图
+                    if (Math.abs(angleDiff) < Math.PI / 7) {
+                        const aimAssist = accuracy * 0.2; // 最多20%角度修正
+                        angle = angle + angleDiff * aimAssist;
+                    }
                 }
             }
 
@@ -8077,23 +8094,38 @@
         function findNearestVillainInDirection(angle) {
             let nearest = null;
             let minDist = Infinity;
+            let bestScore = -Infinity;
 
             villains.forEach(v => {
                 if (!v.alive) return;
                 const vx = v.x + v.width/2 - SLINGSHOT_X;
                 const vy = v.y + v.height/2 - SLINGSHOT_Y;
                 const vAngle = Math.atan2(vy, vx);
-                const angleDiff = Math.abs(vAngle - angle);
 
-                // 只考虑大致在发射方向上的敌人（60度范围内）
-                if (angleDiff < Math.PI / 3 || angleDiff > Math.PI * 5 / 3) {
+                // 计算角度差（处理环绕）
+                let angleDiff = vAngle - angle;
+                while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                angleDiff = Math.abs(angleDiff);
+
+                // 只考虑在发射方向45度范围内的敌人（更严格）
+                if (angleDiff < Math.PI / 4) {
                     const dist = Math.sqrt(vx * vx + vy * vy);
-                    if (dist < minDist) {
+                    // 评分：角度越接近越好，距离适中最好
+                    const angleScore = 1 - (angleDiff / (Math.PI / 4));
+                    const distScore = dist < 600 ? 1 : 600 / dist;
+                    const score = angleScore * 0.7 + distScore * 0.3;
+
+                    if (score > bestScore) {
+                        bestScore = score;
                         minDist = dist;
                         nearest = v;
                     }
                 }
             });
+
+            // 如果没有找到合适目标，或者目标角度偏差太大，返回null
+            if (bestScore < 0.3) return null;
 
             return nearest;
         }
