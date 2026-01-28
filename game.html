@@ -8016,7 +8016,7 @@
             let angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
 
             // 获取角色精准度
-            const buddyType = BUDDY_TYPES[projectile.type];
+            const buddyType = buddyTypes[projectile.type];
             const accuracy = buddyType?.accuracy || 0.8;
 
             // 精准角色：自动微调角度瞄准最近的敌人
