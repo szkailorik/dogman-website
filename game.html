@@ -1005,9 +1005,9 @@
                 tipsText: '飞行中点击屏幕可使用特殊技能！',
 
                 // 角色技能
-                standardAttack: '标准攻击',
+                standardAttack: '精准攻击',
                 splitX3: '分裂×3',
-                superHeavy: '超级重击',
+                superHeavy: '钳子夹击',
                 speedBoost: '加速冲刺',
                 shockwave: '冲击波',
                 boomerang: '回旋镖',
@@ -1075,9 +1075,9 @@
                 tipsText: 'Click during flight to use special abilities!',
 
                 // Character Skills
-                standardAttack: 'Standard',
+                standardAttack: 'Precision',
                 splitX3: 'Split ×3',
-                superHeavy: 'Heavy Hit',
+                superHeavy: 'Claw Attack',
                 speedBoost: 'Speed Boost',
                 shockwave: 'Shockwave',
                 boomerang: 'Boomerang',
@@ -1167,7 +1167,7 @@
                 `${t('littleCat')} | ${t('splitX3')}`,
                 `${t('robotDog')} | ${t('superHeavy')}`,
                 `${t('fishPower')} | ${t('speedBoost')}`,
-                `${t('policeChief')} | ${t('shockwave')}`,
+                `${t('policeChief')} | ${t('standardAttack')}`,
                 `${t('catGirl')} | ${t('boomerang')}`
             ];
             buddyCards.forEach((el, i) => {
@@ -2915,12 +2915,12 @@
         // 伙伴类型 - 基于真实Dog Man角色设计
         // ========================================
         const buddyTypes = {
-            dogman: { name: 'Dog Man', radius: 26, mass: 1, color: '#D2691E', special: null, desc: '标准攻击' },
-            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.6, color: '#FF8C00', special: 'split', desc: '分裂×3' },
-            '80hd': { name: '80-HD', radius: 28, mass: 2.2, color: '#5DADE2', special: 'heavy', desc: '超级重击' },
-            flippy: { name: 'Flippy', radius: 22, mass: 0.7, color: '#F4D03F', special: 'boost', desc: '加速冲刺' },
-            chief: { name: 'Chief', radius: 24, mass: 1.2, color: '#2E86AB', special: 'shockwave', desc: '冲击波' },
-            sarah: { name: 'Sarah', radius: 21, mass: 0.8, color: '#E91E63', special: 'boomerang', desc: '回旋镖' }
+            dogman: { name: 'Dog Man', radius: 26, mass: 1, color: '#D2691E', special: 'precision', desc: '精准攻击', accuracy: 1.0 },
+            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.6, color: '#FF8C00', special: 'split', desc: '分裂×3', accuracy: 0.95 },
+            '80hd': { name: '80-HD', radius: 28, mass: 2.2, color: '#5DADE2', special: 'claws', desc: '钳子夹击', accuracy: 0.85 },
+            flippy: { name: 'Flippy', radius: 22, mass: 0.7, color: '#F4D03F', special: 'boost', desc: '加速冲刺', accuracy: 0.8 },
+            chief: { name: 'Chief', radius: 24, mass: 1.2, color: '#2E86AB', special: 'precision', desc: '精准射击', accuracy: 0.98 },
+            sarah: { name: 'Sarah', radius: 21, mass: 0.8, color: '#E91E63', special: 'boomerang', desc: '回旋镖', accuracy: 0.75 }
         };
         window.buddyTypes = buddyTypes; // 全局访问
 
@@ -2944,6 +2944,7 @@
             window.floatingTexts = [];
             window.shockwaves = [];
             window.bigTexts = [];
+            window.claws = [];
 
             loadLevel(currentLevel);
             generateLevelButtons();
@@ -3130,6 +3131,73 @@
 
             // 绘制伤害数字
             drawDamageNumbers();
+
+            // 绘制钳子
+            drawClaws();
+        }
+
+        // 绘制80HD的钳子
+        function drawClaws() {
+            if (!window.claws || window.claws.length === 0) return;
+
+            window.claws.forEach(claw => {
+                const x = claw.currentX || claw.x;
+                const y = claw.currentY || claw.y;
+                const progress = Math.min(claw.timer / claw.maxTimer, 1);
+                const clawAngle = claw.side === 'left' ? -progress * 0.8 : progress * 0.8;
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(claw.side === 'left' ? -0.3 : 0.3);
+
+                // 钳子主体 - 蓝色机械钳
+                ctx.strokeStyle = '#2980B9';
+                ctx.fillStyle = '#5DADE2';
+                ctx.lineWidth = 3;
+
+                // 上钳
+                ctx.save();
+                ctx.rotate(-clawAngle);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(25, -8);
+                ctx.lineTo(35, -5);
+                ctx.lineTo(30, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+
+                // 下钳
+                ctx.save();
+                ctx.rotate(clawAngle);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(25, 8);
+                ctx.lineTo(35, 5);
+                ctx.lineTo(30, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+
+                // 钳子基座
+                ctx.fillStyle = '#34495E';
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // 发光效果
+                ctx.shadowColor = '#5DADE2';
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = '#AED6F1';
+                ctx.beginPath();
+                ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            });
         }
 
         // 绘制伤害数字 - 愤怒的小鸟风格
@@ -6365,8 +6433,70 @@
                         }
                     }, 600);
                 }
+
+                // 更新钳子
+                updateClaws();
             }
             updateUI();
+        }
+
+        // 更新钳子攻击
+        function updateClaws() {
+            if (!window.claws || window.claws.length === 0) return;
+
+            window.claws.forEach(claw => {
+                claw.timer++;
+
+                if (claw.closing && claw.timer < claw.maxTimer) {
+                    // 钳子向中心合拢
+                    const progress = claw.timer / claw.maxTimer;
+                    const easeProgress = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                    claw.currentX = claw.x + (claw.targetX - claw.x) * easeProgress;
+                    claw.currentY = claw.y + (claw.targetY - claw.y) * easeProgress;
+
+                    // 检测与敌人的碰撞
+                    villains.forEach(v => {
+                        if (!v.alive) return;
+                        const dist = Math.hypot(
+                            claw.currentX - (v.x + v.width/2),
+                            claw.currentY - (v.y + v.height/2)
+                        );
+                        if (dist < 40 && !claw.hitVillain) {
+                            claw.hitVillain = true;
+                            v.health -= claw.damage;
+                            showDamageNumber(v.x + v.width/2, v.y, claw.damage, 'heavy');
+                            playSimpleSound(100, 0.2, 'square');
+
+                            // 夹击特效
+                            for (let i = 0; i < 15; i++) {
+                                particles.push({
+                                    x: v.x + v.width/2,
+                                    y: v.y + v.height/2,
+                                    vx: (Math.random() - 0.5) * 10,
+                                    vy: (Math.random() - 0.5) * 10,
+                                    size: 5 + Math.random() * 5,
+                                    color: '#5DADE2',
+                                    alpha: 1
+                                });
+                            }
+
+                            if (v.health <= 0) {
+                                v.alive = false;
+                                score += 500;
+                                playVillainDefeatSound(v.type);
+                                createDebrisFromVillain(v);
+                                checkGameEnd();
+                            }
+                            updateUI();
+                        }
+                    });
+                } else if (claw.timer >= claw.maxTimer) {
+                    claw.done = true;
+                }
+            });
+
+            // 移除完成的钳子
+            window.claws = window.claws.filter(c => !c.done);
         }
 
         function updateProjectile(p) {
@@ -7643,8 +7773,102 @@
                             alpha: 1
                         });
                     }
+                } else if (projectile.special === 'claws') {
+                    // 80HD 钳子技能 - 生成两个钳子夹击附近敌人
+                    projectile.specialUsed = true;
+                    playSimpleSound(200, 0.2, 'square');
+                    playSimpleSound(150, 0.25, 'sawtooth');
+
+                    // 生成两个钳子
+                    const clawOffsets = [
+                        { angle: -Math.PI / 4, side: 'left' },
+                        { angle: Math.PI / 4, side: 'right' }
+                    ];
+
+                    clawOffsets.forEach(offset => {
+                        const clawX = projectile.x + Math.cos(offset.angle) * 60;
+                        const clawY = projectile.y + Math.sin(offset.angle) * 60;
+
+                        // 添加钳子到特殊物体列表
+                        if (!window.claws) window.claws = [];
+                        window.claws.push({
+                            x: clawX,
+                            y: clawY,
+                            targetX: projectile.x,
+                            targetY: projectile.y,
+                            side: offset.side,
+                            timer: 0,
+                            maxTimer: 30,
+                            closing: true,
+                            damage: 50
+                        });
+
+                        // 钳子出现特效
+                        for (let i = 0; i < 10; i++) {
+                            particles.push({
+                                x: clawX,
+                                y: clawY,
+                                vx: (Math.random() - 0.5) * 6,
+                                vy: (Math.random() - 0.5) * 6,
+                                size: 4 + Math.random() * 6,
+                                color: '#5DADE2',
+                                alpha: 1
+                            });
+                        }
+                    });
+
+                    // 蓝色冲击波
+                    if (!window.shockwaves) window.shockwaves = [];
+                    window.shockwaves.push({
+                        x: projectile.x, y: projectile.y,
+                        radius: 5, maxRadius: 80,
+                        color: 'rgba(93, 173, 226, 0.6)', lineWidth: 6
+                    });
+                } else if (projectile.special === 'precision') {
+                    // 精准技能 - Dog Man 和 Chief 的瞄准辅助
+                    // 点击时锁定最近敌人并微调轨迹
+                    projectile.specialUsed = true;
+
+                    const target = findNearestVillainInDirection(Math.atan2(projectile.vy, projectile.vx));
+                    if (target) {
+                        // 计算到目标的方向
+                        const dx = target.x + target.width/2 - projectile.x;
+                        const dy = target.y + target.height/2 - projectile.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const currentSpeed = Math.sqrt(projectile.vx * projectile.vx + projectile.vy * projectile.vy);
+
+                        // 调整速度方向朝向目标
+                        projectile.vx = (dx / dist) * currentSpeed * 1.1;
+                        projectile.vy = (dy / dist) * currentSpeed * 1.1;
+
+                        // 锁定目标特效
+                        playSimpleSound(800, 0.1, 'sine');
+                        playSimpleSound(1000, 0.08, 'sine');
+
+                        // 目标标记
+                        if (!window.shockwaves) window.shockwaves = [];
+                        window.shockwaves.push({
+                            x: target.x + target.width/2,
+                            y: target.y + target.height/2,
+                            radius: 5, maxRadius: 50,
+                            color: 'rgba(255, 0, 0, 0.8)', lineWidth: 3
+                        });
+
+                        // 瞄准线特效
+                        for (let i = 0; i < 15; i++) {
+                            const t = i / 15;
+                            particles.push({
+                                x: projectile.x + dx * t * 0.5,
+                                y: projectile.y + dy * t * 0.5,
+                                vx: 0, vy: 0,
+                                size: 3,
+                                color: '#FF0000',
+                                alpha: 0.8
+                            });
+                        }
+                    }
                 } else if (projectile.special === 'shockwave') {
-                    // Chief 冲击波技能 - 范围伤害
+                    // Chief 冲击波技能（备用，现在Chief用precision）
                     projectile.specialUsed = true;
                     playSimpleSound(150, 0.3, 'square');
                     playSimpleSound(100, 0.4, 'sawtooth');
@@ -7669,14 +7893,22 @@
                         if (v.alive) {
                             const dist = Math.sqrt((v.x + v.width/2 - projectile.x)**2 + (v.y + v.height/2 - projectile.y)**2);
                             if (dist < shockRadius) {
-                                v.health -= 1;
+                                // 根据距离计算伤害，越近伤害越高
+                                const damageMultiplier = 1 - (dist / shockRadius);
+                                const shockDamage = Math.round(40 + damageMultiplier * 60); // 40-100伤害
+                                v.health -= shockDamage;
+                                showDamageNumber(v.x + v.width/2, v.y, shockDamage, 'heavy');
                                 if (v.health <= 0) {
                                     v.alive = false;
-                                    score += 5000;
+                                    score += 500;
+                                    playVillainDefeatSound(v.type);
+                                    createDebrisFromVillain(v);
                                 }
                             }
                         }
                     });
+                    updateUI();
+                    checkGameEnd();
 
                     // 冲击波粒子
                     for (let i = 0; i < 30; i++) {
@@ -7781,7 +8013,25 @@
 
         function launchProjectile() {
             const power = Math.min(getDistance(projectile, { x: SLINGSHOT_X, y: SLINGSHOT_Y }), MAX_PULL_DISTANCE);
-            const angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
+            let angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
+
+            // 获取角色精准度
+            const buddyType = BUDDY_TYPES[projectile.type];
+            const accuracy = buddyType?.accuracy || 0.8;
+
+            // 精准角色：自动微调角度瞄准最近的敌人
+            if (accuracy >= 0.9) {
+                const targetVillain = findNearestVillainInDirection(angle);
+                if (targetVillain) {
+                    const targetAngle = Math.atan2(
+                        targetVillain.y + targetVillain.height/2 - SLINGSHOT_Y,
+                        targetVillain.x + targetVillain.width/2 - SLINGSHOT_X
+                    );
+                    // 根据精准度混合原角度和目标角度
+                    const aimAssist = accuracy * 0.3; // 最多30%角度修正
+                    angle = angle * (1 - aimAssist) + targetAngle * aimAssist;
+                }
+            }
 
             projectile.vx = Math.cos(angle) * power * LAUNCH_POWER_MULTIPLIER;
             projectile.vy = Math.sin(angle) * power * LAUNCH_POWER_MULTIPLIER;
@@ -7793,6 +8043,31 @@
             buddies[currentBuddyIndex].used = true;
             gameState = 'flying';
             renderBuddiesPanel();
+        }
+
+        // 找到发射方向上最近的敌人
+        function findNearestVillainInDirection(angle) {
+            let nearest = null;
+            let minDist = Infinity;
+
+            villains.forEach(v => {
+                if (!v.alive) return;
+                const vx = v.x + v.width/2 - SLINGSHOT_X;
+                const vy = v.y + v.height/2 - SLINGSHOT_Y;
+                const vAngle = Math.atan2(vy, vx);
+                const angleDiff = Math.abs(vAngle - angle);
+
+                // 只考虑大致在发射方向上的敌人（60度范围内）
+                if (angleDiff < Math.PI / 3 || angleDiff > Math.PI * 5 / 3) {
+                    const dist = Math.sqrt(vx * vx + vy * vy);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = v;
+                    }
+                }
+            });
+
+            return nearest;
         }
 
         // ========================================
@@ -7842,7 +8117,9 @@
                     setTimeout(() => {
                         if (villains.filter(v => v.alive).length > 0) {
                             gameState = 'lost';
-                            showResult(false, 0, 0, 0);
+                            // 失败时也显示实际得分，至少给1星鼓励
+                            const partialStars = score > 1000 ? 1 : 0;
+                            showResult(false, partialStars, 0, 0);
                         }
                     }, 1200);
                 }
