@@ -2915,12 +2915,12 @@
         // 伙伴类型 - 基于真实Dog Man角色设计
         // ========================================
         const buddyTypes = {
-            dogman: { name: 'Dog Man', radius: 26, mass: 1, color: '#D2691E', special: 'precision', desc: '精准攻击', accuracy: 1.0 },
-            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.6, color: '#FF8C00', special: 'split', desc: '分裂×3', accuracy: 0.95 },
-            '80hd': { name: '80-HD', radius: 28, mass: 2.2, color: '#5DADE2', special: 'claws', desc: '钳子夹击', accuracy: 0.85 },
-            flippy: { name: 'Flippy', radius: 22, mass: 0.7, color: '#F4D03F', special: 'boost', desc: '加速冲刺', accuracy: 0.8 },
-            chief: { name: 'Chief', radius: 24, mass: 1.2, color: '#2E86AB', special: 'precision', desc: '精准射击', accuracy: 0.98 },
-            sarah: { name: 'Sarah', radius: 21, mass: 0.8, color: '#E91E63', special: 'boomerang', desc: '回旋镖', accuracy: 0.75 }
+            dogman: { name: 'Dog Man', radius: 26, mass: 1.0, color: '#D2691E', special: 'precision', desc: '精准攻击', accuracy: 1.0 },
+            lilpetey: { name: "Li'l Petey", radius: 20, mass: 0.8, color: '#FF8C00', special: 'split', desc: '分裂×3', accuracy: 0.95 },
+            '80hd': { name: '80-HD', radius: 28, mass: 1.5, color: '#5DADE2', special: 'claws', desc: '钳子夹击', accuracy: 0.9 },
+            flippy: { name: 'Flippy', radius: 22, mass: 0.9, color: '#F4D03F', special: 'boost', desc: '加速冲刺', accuracy: 0.85 },
+            chief: { name: 'Chief', radius: 24, mass: 1.1, color: '#2E86AB', special: 'precision', desc: '精准射击', accuracy: 0.98 },
+            sarah: { name: 'Sarah', radius: 21, mass: 0.85, color: '#E91E63', special: 'boomerang', desc: '回旋镖', accuracy: 0.8 }
         };
         window.buddyTypes = buddyTypes; // 全局访问
 
@@ -6016,27 +6016,55 @@
 
         function drawTrajectory() {
             const power = Math.min(getDistance(projectile, { x: SLINGSHOT_X, y: SLINGSHOT_Y }), MAX_PULL_DISTANCE);
-            const angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
+            let angle = Math.atan2(SLINGSHOT_Y - projectile.y, SLINGSHOT_X - projectile.x);
+
+            // 获取角色精准度，应用瞄准辅助
+            const buddyType = buddyTypes[projectile.type];
+            const accuracy = buddyType?.accuracy || 0.8;
+
+            // 精准角色：预览时也显示辅助后的轨迹
+            if (accuracy >= 0.9) {
+                const targetVillain = findNearestVillainInDirection(angle);
+                if (targetVillain) {
+                    const targetAngle = Math.atan2(
+                        targetVillain.y + targetVillain.height/2 - SLINGSHOT_Y,
+                        targetVillain.x + targetVillain.width/2 - SLINGSHOT_X
+                    );
+                    const aimAssist = accuracy * 0.3;
+                    angle = angle * (1 - aimAssist) + targetAngle * aimAssist;
+                }
+            }
+
             const vx = Math.cos(angle) * power * LAUNCH_POWER_MULTIPLIER;
             const vy = Math.sin(angle) * power * LAUNCH_POWER_MULTIPLIER;
 
             let px = SLINGSHOT_X, py = SLINGSHOT_Y;
             let pvx = vx, pvy = vy;
 
-            ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            for (let i = 0; i < 40; i++) {
+            // 轨迹线颜色根据角色变化
+            const colors = {
+                'dogman': 'rgba(210, 105, 30, 0.8)',
+                'lilpetey': 'rgba(255, 140, 0, 0.8)',
+                '80hd': 'rgba(93, 173, 226, 0.8)',
+                'flippy': 'rgba(244, 208, 63, 0.8)',
+                'chief': 'rgba(46, 134, 171, 0.8)',
+                'sarah': 'rgba(233, 30, 99, 0.8)'
+            };
+            ctx.fillStyle = colors[projectile.type] || 'rgba(255,255,255,0.6)';
+
+            for (let i = 0; i < 50; i++) {
                 pvx *= AIR_RESISTANCE;
-                pvy += GRAVITY * (projectile.mass || 1);
+                pvy += GRAVITY;  // 统一重力，不用质量
                 pvy *= AIR_RESISTANCE;
                 px += pvx;
                 py += pvy;
 
                 if (py > GROUND_Y) break;
 
-                const alpha = 1 - i / 40;
-                ctx.globalAlpha = alpha * 0.6;
+                const alpha = 1 - i / 50;
+                ctx.globalAlpha = alpha * 0.7;
                 ctx.beginPath();
-                ctx.arc(px, py, 4 - i * 0.08, 0, Math.PI * 2);
+                ctx.arc(px, py, 5 - i * 0.08, 0, Math.PI * 2);
                 ctx.fill();
             }
             ctx.globalAlpha = 1;
